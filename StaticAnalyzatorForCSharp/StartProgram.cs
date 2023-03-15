@@ -9,6 +9,7 @@ namespace StaticAnalyzatorForCSharp
 {
     internal class StartProgram
     {
+        [STAThread]
         static void Main(string[] args)
         {
             Application.Run(new InitializationForm());

@@ -13,9 +13,8 @@ namespace StaticAnalyzatorForCSharp
 {
     internal class TestingStaticAnalyzator
     {
-        public static string Start()
+        public static string Start(string path)
         {
-            string solutionPath = @"C:\Works\ConsoleApp1\ConsoleApp1.sln";
             string logPath = "";
 
             StringBuilder warnings = new StringBuilder();
@@ -26,7 +25,7 @@ namespace StaticAnalyzatorForCSharp
             MSBuildLocator.RegisterDefaults();
             using (var workspace = MSBuildWorkspace.Create())
             {
-                Project currProject = GetProjectFromSolution(solutionPath, workspace);
+                Project currProject = GetProjectFromSolution(path, workspace);
                 foreach (var document in currProject.Documents)
                 {
                     var tree = document.GetSyntaxTreeAsync().Result;
@@ -69,7 +68,6 @@ namespace StaticAnalyzatorForCSharp
         static Project GetProjectFromSolution(String solutionPath,
                                       MSBuildWorkspace workspace)
         {
-            //MSBuildLocator.RegisterDefaults();
             Solution currSolution = workspace.OpenSolutionAsync(solutionPath)
                                              .Result;
             return currSolution.Projects.Single();

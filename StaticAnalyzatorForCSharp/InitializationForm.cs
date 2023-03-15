@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -17,9 +18,10 @@ namespace StaticAnalyzatorForCSharp
 {
     public partial class InitializationForm : Form
     {
-        private Button button1;
+        private Button buttonStart;
         private TableLayoutPanel tableLayoutPanel1;
-        private TextBox textBox1;
+        private Button buttonSearchPath;
+        private TextBox textBoxPath;
 
         public InitializationForm()
         {
@@ -28,41 +30,67 @@ namespace StaticAnalyzatorForCSharp
 
         private void InitializeComponent()
         {
-            this.textBox1 = new System.Windows.Forms.TextBox();
-            this.button1 = new System.Windows.Forms.Button();
+            this.textBoxPath = new System.Windows.Forms.TextBox();
+            this.buttonStart = new System.Windows.Forms.Button();
+            this.buttonSearchPath = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
-            // textBox1
+            // textBoxPath
             // 
-            this.textBox1.Location = new System.Drawing.Point(13, 24);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(100, 20);
-            this.textBox1.TabIndex = 0;
+            this.textBoxPath.Location = new System.Drawing.Point(13, 24);
+            this.textBoxPath.Name = "textBoxPath";
+            this.textBoxPath.Size = new System.Drawing.Size(533, 20);
+            this.textBoxPath.TabIndex = 0;
             // 
-            // button1
+            // buttonStart
             // 
-            this.button1.Location = new System.Drawing.Point(668, 24);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 1;
-            this.button1.Text = "button1";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.buttonStart.Location = new System.Drawing.Point(668, 70);
+            this.buttonStart.Name = "buttonStart";
+            this.buttonStart.Size = new System.Drawing.Size(75, 23);
+            this.buttonStart.TabIndex = 1;
+            this.buttonStart.Text = "button1";
+            this.buttonStart.UseVisualStyleBackColor = true;
+            this.buttonStart.Click += new System.EventHandler(this.ButtonStartAnalysis);
+            // 
+            // buttonSearchPath
+            // 
+            this.buttonSearchPath.Location = new System.Drawing.Point(668, 24);
+            this.buttonSearchPath.Name = "buttonSearchPath";
+            this.buttonSearchPath.Size = new System.Drawing.Size(75, 23);
+            this.buttonSearchPath.TabIndex = 2;
+            this.buttonSearchPath.Text = "button2";
+            this.buttonSearchPath.UseVisualStyleBackColor = true;
+            this.buttonSearchPath.Click += new System.EventHandler(this.ButtonSearchPath);
             // 
             // InitializationForm
             // 
             this.ClientSize = new System.Drawing.Size(784, 561);
-            this.Controls.Add(this.button1);
-            this.Controls.Add(this.textBox1);
+            this.Controls.Add(this.buttonSearchPath);
+            this.Controls.Add(this.buttonStart);
+            this.Controls.Add(this.textBoxPath);
             this.Name = "InitializationForm";
             this.ResumeLayout(false);
             this.PerformLayout();
 
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void ButtonStartAnalysis(object sender, EventArgs e)
         {
-            textBox1.Text = TestingStaticAnalyzator.Start();
+            textBoxPath.Text = TestingStaticAnalyzator.Start(textBoxPath.Text);
+        }
+
+        private void ButtonSearchPath(object sender, EventArgs e)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Filter = "SLN-файлы(*.sln)|*.sln";
+            openFileDialog.CheckFileExists = true;
+            openFileDialog.Multiselect = true;
+            openFileDialog.Multiselect = true;
+
+            if (openFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                textBoxPath.Text = openFileDialog.FileName;
+            }
         }
     }
 }
