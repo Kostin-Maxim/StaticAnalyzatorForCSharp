@@ -30,79 +30,6 @@ namespace StaticAnalyzatorForCSharp
             Application.Run(new Program());
         }
 
-        public string Start()
-        {
-            string solutionPath = @"C:\Works\ConsoleApp1\ConsoleApp1.sln";
-            string logPath = "";
-
-            StringBuilder warnings = new StringBuilder();
-
-            const string warningMessageFormat =
-              "'if' with equal 'then' and 'else' blocks is found in file {0} at line {1}";
-
-            MSBuildLocator.RegisterDefaults();
-            using (var workspace = MSBuildWorkspace.Create())
-            {
-                Project currProject = GetProjectFromSolution(solutionPath, workspace);
-                foreach (var document in currProject.Documents)
-                {
-                    var tree = document.GetSyntaxTreeAsync().Result;
-                    var ifStatementNodes = tree.GetRoot()
-                                               .DescendantNodesAndSelf()
-                                               .OfType<IfStatementSyntax>();
-                    var correctA = tree.GetRoot()
-                                       .DescendantNodesAndSelf()
-                                       .OfType<VariableDeclarationSyntax>();
-
-
-                    foreach (var ifStatement in ifStatementNodes)
-                    {
-                        if (ApplyRule(ifStatement))
-                        {
-                            int lineNumber = ifStatement.GetLocation()
-                                                        .GetLineSpan()
-                                                        .StartLinePosition.Line + 1;
-
-                            warnings.AppendLine(String.Format(warningMessageFormat,
-                                                              document.FilePath,
-                                                              lineNumber));
-                        }
-                    }
-                }
-
-                if (warnings.Capacity != 0)
-                {
-                    return textBox1.Text = "1";
-                }
-                else
-                {
-                    return textBox1.Text = "2";
-                }
-
-            }
-            
-        }
-
-        static Project GetProjectFromSolution(String solutionPath,
-                                      MSBuildWorkspace workspace)
-        {
-            //MSBuildLocator.RegisterDefaults();
-            Solution currSolution = workspace.OpenSolutionAsync(solutionPath)
-                                             .Result;
-            return currSolution.Projects.Single();
-        }
-
-        static bool ApplyRule(IfStatementSyntax ifStatement)
-        {
-            if (ifStatement?.Else == null)
-                return false;
-
-            StatementSyntax thenBody = ifStatement.Statement;
-            StatementSyntax elseBody = ifStatement.Else.Statement;
-
-            return SyntaxFactory.AreEquivalent(thenBody, elseBody);
-        }
-
         private void InitializeComponent()
         {
             this.textBox1 = new System.Windows.Forms.TextBox();
@@ -139,8 +66,7 @@ namespace StaticAnalyzatorForCSharp
 
         private void button1_Click(object sender, EventArgs e)
         {
-            textBox1.Text = Start();
-
+            textBox1.Text = TestingStaticAnalyzator.Start();
         }
     }
 }
