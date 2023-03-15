@@ -15,19 +15,15 @@ using System.Windows.Forms;
 
 namespace StaticAnalyzatorForCSharp
 {
-    public partial class Program : Form
+    public partial class InitializationForm : Form
     {
         private Button button1;
+        private TableLayoutPanel tableLayoutPanel1;
         private TextBox textBox1;
 
-        public Program()
-        { 
-            InitializeComponent();
-        }
-
-        static void Main(string[] args)
+        public InitializationForm()
         {
-            Application.Run(new Program());
+            InitializeComponent();
         }
 
         private void InitializeComponent()
@@ -45,7 +41,7 @@ namespace StaticAnalyzatorForCSharp
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(168, 20);
+            this.button1.Location = new System.Drawing.Point(668, 24);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(75, 23);
             this.button1.TabIndex = 1;
@@ -53,12 +49,12 @@ namespace StaticAnalyzatorForCSharp
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
-            // Program
+            // InitializationForm
             // 
-            this.ClientSize = new System.Drawing.Size(284, 261);
+            this.ClientSize = new System.Drawing.Size(784, 561);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.textBox1);
-            this.Name = "Program";
+            this.Name = "InitializationForm";
             this.ResumeLayout(false);
             this.PerformLayout();
 
