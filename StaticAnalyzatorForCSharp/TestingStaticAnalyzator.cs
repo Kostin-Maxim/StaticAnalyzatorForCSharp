@@ -8,19 +8,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace StaticAnalyzatorForCSharp
 {
     internal class TestingStaticAnalyzator
     {
-        public static string Start(string path)
+        public static void Start(string path, ref ListBox listWarnings)
         {
-            string logPath = "";
-
             StringBuilder warnings = new StringBuilder();
 
             const string warningMessageFormat =
-              "'if' with equal 'then' and 'else' blocks is found in file {0} at line {1}";
+              "if и else приводят к одному результату! Файл: {0}, строка: {1}";
 
             MSBuildLocator.RegisterDefaults();
             using (var workspace = MSBuildWorkspace.Create())
@@ -39,32 +38,25 @@ namespace StaticAnalyzatorForCSharp
 
                     foreach (var ifStatement in ifStatementNodes)
                     {
+                        int counter = 0;
                         if (ApplyRule(ifStatement))
                         {
+                            counter++;
                             int lineNumber = ifStatement.GetLocation()
                                                         .GetLineSpan()
                                                         .StartLinePosition.Line + 1;
 
-                            warnings.AppendLine(String.Format(warningMessageFormat,
+                            listWarnings.Items.Add(String.Format(counter.ToString() + ". " + warningMessageFormat,
                                                               document.FilePath,
                                                               lineNumber));
                         }
                     }
                 }
 
-                if (warnings.Capacity != 0)
-                {
-                    return "1";
-                }
-                else
-                {
-                    return "2";
-                }
-
             }
 
         }
-
+        
         static Project GetProjectFromSolution(String solutionPath,
                                       MSBuildWorkspace workspace)
         {
