@@ -26,8 +26,8 @@ namespace StaticAnalyzatorForCSharp
             this.buttonSearchPath = new System.Windows.Forms.Button();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
-            this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
             this.listBox1 = new System.Windows.Forms.ListBox();
+            this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -42,6 +42,7 @@ namespace StaticAnalyzatorForCSharp
             this.textBoxPath.Name = "textBoxPath";
             this.textBoxPath.Size = new System.Drawing.Size(633, 20);
             this.textBoxPath.TabIndex = 0;
+            this.textBoxPath.Text = "C:\\Works\\ConsoleApp1\\ConsoleApp1.sln";
             // 
             // buttonStart
             // 
@@ -95,6 +96,14 @@ namespace StaticAnalyzatorForCSharp
             this.tableLayoutPanel2.Size = new System.Drawing.Size(639, 261);
             this.tableLayoutPanel2.TabIndex = 1;
             // 
+            // listBox1
+            // 
+            this.listBox1.FormattingEnabled = true;
+            this.listBox1.Location = new System.Drawing.Point(3, 30);
+            this.listBox1.Name = "listBox1";
+            this.listBox1.Size = new System.Drawing.Size(633, 225);
+            this.listBox1.TabIndex = 1;
+            // 
             // tableLayoutPanel3
             // 
             this.tableLayoutPanel3.ColumnCount = 1;
@@ -109,14 +118,6 @@ namespace StaticAnalyzatorForCSharp
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 89.48306F));
             this.tableLayoutPanel3.Size = new System.Drawing.Size(141, 261);
             this.tableLayoutPanel3.TabIndex = 2;
-            // 
-            // listBox1
-            // 
-            this.listBox1.FormattingEnabled = true;
-            this.listBox1.Location = new System.Drawing.Point(3, 30);
-            this.listBox1.Name = "listBox1";
-            this.listBox1.Size = new System.Drawing.Size(633, 225);
-            this.listBox1.TabIndex = 1;
             // 
             // InitializationForm
             // 
