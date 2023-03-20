@@ -1,17 +1,5 @@
-﻿using Microsoft.Build.Locator;
-using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp;
-using Microsoft.CodeAnalysis.CSharp.Symbols;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
-using Microsoft.CodeAnalysis.MSBuild;
-using Microsoft.CodeAnalysis.Text;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace StaticAnalyzatorForCSharp
@@ -19,7 +7,6 @@ namespace StaticAnalyzatorForCSharp
     public partial class InitializationForm : Form
     {
         private Button buttonStart;
-        private TableLayoutPanel tableLayoutPanel1;
         private Button buttonSearchPath;
         private SplitContainer splitContainer1;
         private TableLayoutPanel tableLayoutPanel2;
