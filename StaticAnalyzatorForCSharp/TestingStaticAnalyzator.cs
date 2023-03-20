@@ -6,6 +6,7 @@ using Microsoft.CodeAnalysis.MSBuild;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Metadata;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -31,15 +32,11 @@ namespace StaticAnalyzatorForCSharp
                     var ifStatementNodes = tree.GetRoot()
                                                .DescendantNodesAndSelf()
                                                .OfType<IfStatementSyntax>();
-                    var correctA = tree.GetRoot()
-                                       .DescendantNodesAndSelf()
-                                       .OfType<VariableDeclarationSyntax>();
-
 
                     foreach (var ifStatement in ifStatementNodes)
                     {
                         int counter = 0;
-                        if (ApplyRule(ifStatement))
+                        if (Rules.IfElseRule(ifStatement))
                         {
                             counter++;
                             int lineNumber = ifStatement.GetLocation()
@@ -51,6 +48,7 @@ namespace StaticAnalyzatorForCSharp
                                                               lineNumber));
                         }
                     }
+                    
                 }
 
             }
@@ -63,17 +61,6 @@ namespace StaticAnalyzatorForCSharp
             Solution currSolution = workspace.OpenSolutionAsync(solutionPath)
                                              .Result;
             return currSolution.Projects.Single();
-        }
-
-        static bool ApplyRule(IfStatementSyntax ifStatement)
-        {
-            if (ifStatement?.Else == null)
-                return false;
-
-            StatementSyntax thenBody = ifStatement.Statement;
-            StatementSyntax elseBody = ifStatement.Else.Statement;
-
-            return SyntaxFactory.AreEquivalent(thenBody, elseBody);
         }
     }
 }
