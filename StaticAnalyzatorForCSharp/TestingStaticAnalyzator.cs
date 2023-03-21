@@ -24,6 +24,8 @@ namespace StaticAnalyzatorForCSharp
                 "if и else приводят к одному результату! Файл: {0}, строка: {1}";
             const string isThrowWarningMessage =
                 "Cоздаётся экземпляр класса, унаследованного от 'System.Exception', но при этом никак не используется! Файл: {0}, строка: {1}";
+            const string isUpperSymbolInMethodMessage =
+                "Метод: {0} называется с маленькой буквы. Файл: {1}, строка: {2}";
 
             MSBuildLocator.RegisterDefaults();
             using (var workspace = MSBuildWorkspace.Create())
@@ -39,7 +41,10 @@ namespace StaticAnalyzatorForCSharp
                     var throwStatementNodes = tree.GetRoot()
                                                .DescendantNodes()
                                                .OfType<ObjectCreationExpressionSyntax>();
-
+                    var methodStatementNodes = tree.GetRoot()
+                                              .DescendantNodesAndSelf()
+                                              .OfType<MethodDeclarationSyntax>();
+                    
                     foreach (var ifStatement in ifStatementNodes)
                     {
                         if (Rules.IfElseRule(ifStatement))
@@ -60,7 +65,6 @@ namespace StaticAnalyzatorForCSharp
                     {
                         if (Rules.IsMissingThrowOperatorRule(compilation.GetSemanticModel(tree), throwStatement))
                         {
-
                             counterWarnings++;
                             int lineNumber = throwStatement.GetLocation()
                             .GetLineSpan()
@@ -71,8 +75,22 @@ namespace StaticAnalyzatorForCSharp
                                                               lineNumber));
                         }
                     }
-                    
-                    
+
+                    foreach (var methodDeclaration in methodStatementNodes)
+                    {
+                        if (Rules.MethodUpperSymbolRule(methodDeclaration, out var methodName))
+                        {
+                            counterWarnings++;
+                            int lineNumber = methodDeclaration.GetLocation()
+                            .GetLineSpan()
+                            .StartLinePosition.Line + 1;
+
+                            listWarnings.Items.Add(String.Format(counterWarnings + ". " + isUpperSymbolInMethodMessage,
+                                                              methodName,
+                                                              document.FilePath,
+                                                              lineNumber));
+                        }
+                    }
                 }
 
             }
