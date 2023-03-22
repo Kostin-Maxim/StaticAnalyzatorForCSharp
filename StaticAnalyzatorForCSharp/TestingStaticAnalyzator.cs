@@ -25,7 +25,9 @@ namespace StaticAnalyzatorForCSharp
             const string isThrowWarningMessage =
                 "Cоздаётся экземпляр класса, унаследованного от 'System.Exception', но при этом никак не используется! Файл: {0}, строка: {1}";
             const string isUpperSymbolInMethodMessage =
-                "Метод: {0} называется с маленькой буквы. Файл: {1}, строка: {2}";
+                "Метод: '{0}' объявлена с маленькой буквы. Файл: {1}, строка: {2}";
+            const string isLowerSymbolInVariableMessage =
+                "Переменная: '{0}' объявлена с заглавной буквы. Файл: {1}, строка: {2}";
 
             MSBuildLocator.RegisterDefaults();
             using (var workspace = MSBuildWorkspace.Create())
@@ -44,6 +46,9 @@ namespace StaticAnalyzatorForCSharp
                     var methodStatementNodes = tree.GetRoot()
                                               .DescendantNodesAndSelf()
                                               .OfType<MethodDeclarationSyntax>();
+                    var variableStatementsNodes = tree.GetRoot()
+                                                      .DescendantNodesAndSelf()
+                                                      .OfType<VariableDeclarationSyntax>();
                     
                     foreach (var ifStatement in ifStatementNodes)
                     {
@@ -86,6 +91,22 @@ namespace StaticAnalyzatorForCSharp
                             .StartLinePosition.Line + 1;
 
                             listWarnings.Items.Add(String.Format(counterWarnings + ". " + isUpperSymbolInMethodMessage,
+                                                              methodName,
+                                                              document.FilePath,
+                                                              lineNumber));
+                        }
+                    }
+
+                    foreach (var variableDeclaration in variableStatementsNodes)
+                    {
+                        if (Rules.VariableLowerSymbolRule(variableDeclaration, out var methodName))
+                        {
+                            counterWarnings++;
+                            int lineNumber = variableDeclaration.GetLocation()
+                            .GetLineSpan()
+                            .StartLinePosition.Line + 1;
+
+                            listWarnings.Items.Add(String.Format(counterWarnings + ". " + isLowerSymbolInVariableMessage,
                                                               methodName,
                                                               document.FilePath,
                                                               lineNumber));

@@ -68,5 +68,12 @@ namespace StaticAnalyzatorForCSharp
             methodName = methodDeclaration.Identifier.Text;
             return methodName.Length != 0 && !char.IsUpper(methodName[0]);
         }
+
+        internal static bool VariableLowerSymbolRule(VariableDeclarationSyntax variableDeclaration, out string variableName)
+        {
+            variableName = variableDeclaration.Variables.ToString();
+            variableName = variableName.Substring(0, variableName.IndexOf(" "));
+            return variableName.Length != 0 && !char.IsLower(variableName[0]);
+        }
     }
 }
