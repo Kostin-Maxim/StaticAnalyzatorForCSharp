@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.CodeAnalysis.CSharp.Syntax;
+using System;
 using System.IO;
 using System.Windows.Forms;
 
@@ -12,11 +13,15 @@ namespace StaticAnalyzatorForCSharp
         private TableLayoutPanel tableLayoutPanel2;
         private TableLayoutPanel tableLayoutPanel3;
         private ListBox listBox1;
+        private Button buttonSettings;
         private TextBox textBoxPath;
+        private Form formSettings;
+        private static Form mainForm;
 
         public InitializationForm()
         {
             InitializeComponent();
+            mainForm = this;
         }
 
         private void InitializeComponent()
@@ -28,6 +33,7 @@ namespace StaticAnalyzatorForCSharp
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
             this.listBox1 = new System.Windows.Forms.ListBox();
             this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
+            this.buttonSettings = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -46,9 +52,9 @@ namespace StaticAnalyzatorForCSharp
             // 
             // buttonStart
             // 
-            this.buttonStart.Location = new System.Drawing.Point(3, 30);
+            this.buttonStart.Location = new System.Drawing.Point(3, 41);
             this.buttonStart.Name = "buttonStart";
-            this.buttonStart.Size = new System.Drawing.Size(135, 23);
+            this.buttonStart.Size = new System.Drawing.Size(123, 23);
             this.buttonStart.TabIndex = 1;
             this.buttonStart.Text = "button1";
             this.buttonStart.UseVisualStyleBackColor = true;
@@ -58,7 +64,7 @@ namespace StaticAnalyzatorForCSharp
             // 
             this.buttonSearchPath.Location = new System.Drawing.Point(3, 3);
             this.buttonSearchPath.Name = "buttonSearchPath";
-            this.buttonSearchPath.Size = new System.Drawing.Size(135, 21);
+            this.buttonSearchPath.Size = new System.Drawing.Size(123, 21);
             this.buttonSearchPath.TabIndex = 2;
             this.buttonSearchPath.Text = "button2";
             this.buttonSearchPath.UseVisualStyleBackColor = true;
@@ -78,7 +84,7 @@ namespace StaticAnalyzatorForCSharp
             // 
             this.splitContainer1.Panel2.Controls.Add(this.tableLayoutPanel3);
             this.splitContainer1.Size = new System.Drawing.Size(784, 261);
-            this.splitContainer1.SplitterDistance = 639;
+            this.splitContainer1.SplitterDistance = 651;
             this.splitContainer1.TabIndex = 3;
             // 
             // tableLayoutPanel2
@@ -93,7 +99,7 @@ namespace StaticAnalyzatorForCSharp
             this.tableLayoutPanel2.RowCount = 2;
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 10.51693F));
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 89.48306F));
-            this.tableLayoutPanel2.Size = new System.Drawing.Size(639, 261);
+            this.tableLayoutPanel2.Size = new System.Drawing.Size(651, 261);
             this.tableLayoutPanel2.TabIndex = 1;
             // 
             // listBox1
@@ -108,16 +114,28 @@ namespace StaticAnalyzatorForCSharp
             // 
             this.tableLayoutPanel3.ColumnCount = 1;
             this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel3.Controls.Add(this.buttonSettings, 0, 2);
             this.tableLayoutPanel3.Controls.Add(this.buttonStart, 0, 1);
             this.tableLayoutPanel3.Controls.Add(this.buttonSearchPath, 0, 0);
             this.tableLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel3.Location = new System.Drawing.Point(0, 0);
             this.tableLayoutPanel3.Name = "tableLayoutPanel3";
-            this.tableLayoutPanel3.RowCount = 2;
-            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 10.51693F));
-            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 89.48306F));
-            this.tableLayoutPanel3.Size = new System.Drawing.Size(141, 261);
+            this.tableLayoutPanel3.RowCount = 3;
+            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 44.70588F));
+            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 55.29412F));
+            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 175F));
+            this.tableLayoutPanel3.Size = new System.Drawing.Size(129, 261);
             this.tableLayoutPanel3.TabIndex = 2;
+            // 
+            // buttonSettings
+            // 
+            this.buttonSettings.Location = new System.Drawing.Point(3, 88);
+            this.buttonSettings.Name = "buttonSettings";
+            this.buttonSettings.Size = new System.Drawing.Size(123, 23);
+            this.buttonSettings.TabIndex = 3;
+            this.buttonSettings.Text = "Настройки";
+            this.buttonSettings.UseVisualStyleBackColor = true;
+            this.buttonSettings.Click += new System.EventHandler(this.ButtonOpenSettingsWindow);
             // 
             // InitializationForm
             // 
@@ -166,6 +184,18 @@ namespace StaticAnalyzatorForCSharp
             {
                 textBoxPath.Text = openFileDialog.FileName;
             }
+        }
+
+        private void ButtonOpenSettingsWindow(object sender, EventArgs e)
+        {
+            formSettings = new SettingsForm();
+            this.Enabled = false;
+            formSettings.Show();
+        }
+
+        static internal Form GetMainForm()
+        {
+            return mainForm;
         }
     }
 }

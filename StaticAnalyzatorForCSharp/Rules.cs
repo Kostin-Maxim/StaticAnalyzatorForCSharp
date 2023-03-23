@@ -22,14 +22,9 @@ namespace StaticAnalyzatorForCSharp
             return SyntaxFactory.AreEquivalent(thenBody, elseBody);
         }
 
-
-        //private static readonly string ExceptionTypeName = typeof(Exception).FullName;
         internal static bool IsMissingThrowOperatorRule(SemanticModel model,
                                ObjectCreationExpressionSyntax node)
         {
-            //if (!IsExceptionType(model, node))
-            //    return false;
-
             if (IsReferenceUsed(model, node.Parent))
                 return false;
 
@@ -48,20 +43,6 @@ namespace StaticAnalyzatorForCSharp
 
             return true;
         }
-
-        /*internal static bool IsExceptionType(SemanticModel model,
-                        SyntaxNode node)
-        {
-            ITypeSymbol nodeType = model.GetTypeInfo(node).Type;
-
-            while (nodeType != null && !(Equals(nodeType.Name,
-                                                ExceptionTypeName)))
-                nodeType = nodeType.BaseType;
-
-            return Equals(nodeType?.Name,
-                          ExceptionTypeName);
-
-        }*/
 
         internal static bool MethodUpperSymbolRule(MethodDeclarationSyntax methodDeclaration, out string methodName)
         {
