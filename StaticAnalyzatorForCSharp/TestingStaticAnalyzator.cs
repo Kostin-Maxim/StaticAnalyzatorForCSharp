@@ -37,85 +37,95 @@ namespace StaticAnalyzatorForCSharp
                 foreach (var document in currProject.Documents)
                 {
                     var tree = document.GetSyntaxTreeAsync().Result;
-                    var ifStatementNodes = tree.GetRoot()
-                                               .DescendantNodesAndSelf()
-                                               .OfType<IfStatementSyntax>();
-                    var throwStatementNodes = tree.GetRoot()
-                                               .DescendantNodes()
-                                               .OfType<ObjectCreationExpressionSyntax>();
-                    var methodStatementNodes = tree.GetRoot()
-                                              .DescendantNodesAndSelf()
-                                              .OfType<MethodDeclarationSyntax>();
-                    var variableStatementsNodes = tree.GetRoot()
-                                                      .DescendantNodesAndSelf()
-                                                      .OfType<VariableDeclarationSyntax>();
-                    
-                    foreach (var ifStatement in ifStatementNodes)
-                    {
-                        if (Rules.IfElseRule(ifStatement))
-                        {
-                            counterWarnings++;
-                            int lineNumber = ifStatement.GetLocation()
-                                                        .GetLineSpan()
-                                                        .StartLinePosition.Line + 1;
 
-                            listWarnings.Items.Add(String.Format(counterWarnings + ". " + ifWarningMessage,
-                                                              document.FilePath,
-                                                              lineNumber));
+                    if (SettingsRules.GetDictionary(SettingsRules.NamesErrors.ifWarningMessage))
+                    {
+                        var ifStatementNodes = tree.GetRoot()
+                                                   .DescendantNodesAndSelf()
+                                                   .OfType<IfStatementSyntax>();
+                        foreach (var ifStatement in ifStatementNodes)
+                        {
+                            if (Rules.IfElseRule(ifStatement))
+                            {
+                                counterWarnings++;
+                                int lineNumber = ifStatement.GetLocation()
+                                                            .GetLineSpan()
+                                                            .StartLinePosition.Line + 1;
+
+                                listWarnings.Items.Add(String.Format(counterWarnings + ". " + ifWarningMessage,
+                                                                  document.FilePath,
+                                                                  lineNumber));
+                            }
                         }
                     }
 
-                    Compilation compilation = currProject.GetCompilationAsync().Result;
-                    foreach (var throwStatement in throwStatementNodes)
+                    if (SettingsRules.GetDictionary(SettingsRules.NamesErrors.isThrowWarningMessage))
                     {
-                        if (Rules.IsMissingThrowOperatorRule(compilation.GetSemanticModel(tree), throwStatement))
+                        var throwStatementNodes = tree.GetRoot()
+                                                   .DescendantNodes()
+                                                   .OfType<ObjectCreationExpressionSyntax>();
+                        Compilation compilation = currProject.GetCompilationAsync().Result;
+                        foreach (var throwStatement in throwStatementNodes)
                         {
-                            counterWarnings++;
-                            int lineNumber = throwStatement.GetLocation()
-                            .GetLineSpan()
-                            .StartLinePosition.Line + 1;
+                            if (Rules.IsMissingThrowOperatorRule(compilation.GetSemanticModel(tree), throwStatement))
+                            {
+                                counterWarnings++;
+                                int lineNumber = throwStatement.GetLocation()
+                                .GetLineSpan()
+                                .StartLinePosition.Line + 1;
 
-                            listWarnings.Items.Add(String.Format(counterWarnings + ". " + isThrowWarningMessage,
-                                                              document.FilePath,
-                                                              lineNumber));
+                                listWarnings.Items.Add(String.Format(counterWarnings + ". " + isThrowWarningMessage,
+                                                                  document.FilePath,
+                                                                  lineNumber));
+                            }
                         }
                     }
 
-                    foreach (var methodDeclaration in methodStatementNodes)
+                    if (SettingsRules.GetDictionary(SettingsRules.NamesErrors.isUpperSymbolInMethodMessage))
                     {
-                        if (Rules.MethodUpperSymbolRule(methodDeclaration, out var methodName))
+                        var methodStatementNodes = tree.GetRoot()
+                                                  .DescendantNodesAndSelf()
+                                                  .OfType<MethodDeclarationSyntax>();
+                        foreach (var methodDeclaration in methodStatementNodes)
                         {
-                            counterWarnings++;
-                            int lineNumber = methodDeclaration.GetLocation()
-                            .GetLineSpan()
-                            .StartLinePosition.Line + 1;
+                            if (Rules.MethodUpperSymbolRule(methodDeclaration, out var methodName))
+                            {
+                                counterWarnings++;
+                                int lineNumber = methodDeclaration.GetLocation()
+                                .GetLineSpan()
+                                .StartLinePosition.Line + 1;
 
-                            listWarnings.Items.Add(String.Format(counterWarnings + ". " + isUpperSymbolInMethodMessage,
-                                                              methodName,
-                                                              document.FilePath,
-                                                              lineNumber));
+                                listWarnings.Items.Add(String.Format(counterWarnings + ". " + isUpperSymbolInMethodMessage,
+                                                                  methodName,
+                                                                  document.FilePath,
+                                                                  lineNumber));
+                            }
                         }
                     }
 
-                    foreach (var variableDeclaration in variableStatementsNodes)
+                    if (SettingsRules.GetDictionary(SettingsRules.NamesErrors.isLowerSymbolInVariableMessage))
                     {
-                        if (Rules.VariableLowerSymbolRule(variableDeclaration, out var methodName))
+                        var variableStatementsNodes = tree.GetRoot()
+                                                         .DescendantNodesAndSelf()
+                                                         .OfType<VariableDeclarationSyntax>();
+                        foreach (var variableDeclaration in variableStatementsNodes)
                         {
-                            counterWarnings++;
-                            int lineNumber = variableDeclaration.GetLocation()
-                            .GetLineSpan()
-                            .StartLinePosition.Line + 1;
+                            if (Rules.VariableLowerSymbolRule(variableDeclaration, out var methodName))
+                            {
+                                counterWarnings++;
+                                int lineNumber = variableDeclaration.GetLocation()
+                                .GetLineSpan()
+                                .StartLinePosition.Line + 1;
 
-                            listWarnings.Items.Add(String.Format(counterWarnings + ". " + isLowerSymbolInVariableMessage,
-                                                              methodName,
-                                                              document.FilePath,
-                                                              lineNumber));
+                                listWarnings.Items.Add(String.Format(counterWarnings + ". " + isLowerSymbolInVariableMessage,
+                                                                  methodName,
+                                                                  document.FilePath,
+                                                                  lineNumber));
+                            }
                         }
-                    }
+                    } 
                 }
-
             }
-
         }
         
         static Project GetProjectFromSolution(String solutionPath,
