@@ -14,17 +14,19 @@ namespace StaticAnalyzatorForCSharp
         private Button buttonSaveSettings;
         private CheckedListBox checkedListBox1;
         private Form mainForm;
+        private Form settingsForm;
 
         public SettingsForm()
         {
             InitializeComponent();
+            settingsForm = this;
         }
 
         private void InitializeComponent()
         {
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.buttonSaveSettings = new System.Windows.Forms.Button();
             this.buttonAbortSettings = new System.Windows.Forms.Button();
+            this.buttonSaveSettings = new System.Windows.Forms.Button();
             this.checkedListBox1 = new System.Windows.Forms.CheckedListBox();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -51,16 +53,6 @@ namespace StaticAnalyzatorForCSharp
             this.splitContainer1.SplitterDistance = 54;
             this.splitContainer1.TabIndex = 0;
             // 
-            // buttonSaveSettings
-            // 
-            this.buttonSaveSettings.Location = new System.Drawing.Point(12, 12);
-            this.buttonSaveSettings.Name = "buttonSaveSettings";
-            this.buttonSaveSettings.Size = new System.Drawing.Size(75, 23);
-            this.buttonSaveSettings.TabIndex = 0;
-            this.buttonSaveSettings.Text = "Сохранить";
-            this.buttonSaveSettings.UseVisualStyleBackColor = true;
-            this.buttonSaveSettings.Click += new System.EventHandler(this.ButtonSaveSettings);
-            // 
             // buttonAbortSettings
             // 
             this.buttonAbortSettings.Location = new System.Drawing.Point(197, 12);
@@ -70,6 +62,16 @@ namespace StaticAnalyzatorForCSharp
             this.buttonAbortSettings.Text = "Отмена";
             this.buttonAbortSettings.UseVisualStyleBackColor = true;
             this.buttonAbortSettings.Click += new System.EventHandler(this.ButtonAbortSettings);
+            // 
+            // buttonSaveSettings
+            // 
+            this.buttonSaveSettings.Location = new System.Drawing.Point(12, 12);
+            this.buttonSaveSettings.Name = "buttonSaveSettings";
+            this.buttonSaveSettings.Size = new System.Drawing.Size(75, 23);
+            this.buttonSaveSettings.TabIndex = 0;
+            this.buttonSaveSettings.Text = "Сохранить";
+            this.buttonSaveSettings.UseVisualStyleBackColor = true;
+            this.buttonSaveSettings.Click += new System.EventHandler(this.ButtonSaveSettings);
             // 
             // checkedListBox1
             // 
@@ -85,6 +87,7 @@ namespace StaticAnalyzatorForCSharp
             this.ClientSize = new System.Drawing.Size(284, 261);
             this.Controls.Add(this.splitContainer1);
             this.Name = "SettingsForm";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.SettingsForm_FormClosing);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
@@ -95,18 +98,26 @@ namespace StaticAnalyzatorForCSharp
 
         private void ButtonSaveSettings(object sender, EventArgs e)
         {
-
+            CloseWindowSettigs();
+            settingsForm.Close();
         }
 
         private void ButtonAbortSettings(object sender, EventArgs e)
         {
-            mainForm = InitializationForm.GetMainForm();   
-            //this.Close();
-            mainForm.Enabled = true;
-            mainForm.Show();
-            
+            CloseWindowSettigs();
+            settingsForm.Close();
         }
 
+        private void CloseWindowSettigs()
+        {
+            mainForm = InitializationForm.GetMainForm();
+            mainForm.Enabled = true;
+            mainForm.Show();
+        }
 
+        private void SettingsForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            CloseWindowSettigs();
+        }
     }
 }
