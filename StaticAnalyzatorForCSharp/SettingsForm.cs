@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,11 +16,15 @@ namespace StaticAnalyzatorForCSharp
         private CheckedListBox checkedListBox1;
         private Form mainForm;
         private Form settingsForm;
-
+        
         public SettingsForm()
         {
             InitializeComponent();
-            settingsForm = this;
+            settingsForm = this;    // Поменять здесь добавление элементов не из Енама, а из Настроек 
+            foreach(var ruleName in Enum.GetValues(typeof(SettingsRules.NamesErrors)))
+            { 
+                checkedListBox1.Items.Add(ruleName);
+            }
         }
 
         private void InitializeComponent()
@@ -98,6 +103,27 @@ namespace StaticAnalyzatorForCSharp
 
         private void ButtonSaveSettings(object sender, EventArgs e)
         {
+            bool flag = false;
+            foreach (var nameFromEnum in checkedListBox1.CheckedItems)
+            {
+                if (flag)
+                {
+                    flag = false;
+                    continue;
+                }
+
+                foreach (var qwer in Properties.Settings.Default.Properties)
+                {
+                    if(nameFromEnum.ToString() == ((SettingsProperty)qwer).Name.ToString())
+                    {
+                        ((SettingsProperty)qwer).DefaultValue = true;
+                        flag = true;
+                        break;
+                    }
+                }
+            }
+
+
             CloseWindowSettigs();
             settingsForm.Close();
         }
