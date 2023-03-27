@@ -19,10 +19,10 @@ namespace StaticAnalyzatorForCSharp
 
         private static Dictionary<NamesErrors, bool> rules = new Dictionary<NamesErrors, bool>()
         {
-            {NamesErrors.ifWarningMessage, false },
-            {NamesErrors.isThrowWarningMessage, false },
+            {NamesErrors.ifWarningMessage, true },
+            {NamesErrors.isThrowWarningMessage, true },
             {NamesErrors.isUpperSymbolInMethodMessage, true },
-            {NamesErrors.isLowerSymbolInVariableMessage, false }
+            {NamesErrors.isLowerSymbolInVariableMessage, true }
         };
 
         public static void SetDictionary(NamesErrors key, bool value)

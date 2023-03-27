@@ -48,7 +48,7 @@ namespace StaticAnalyzatorForCSharp
             this.textBoxPath.Name = "textBoxPath";
             this.textBoxPath.Size = new System.Drawing.Size(633, 20);
             this.textBoxPath.TabIndex = 0;
-            this.textBoxPath.Text = "C:\\Works\\ConsoleApp1\\ConsoleApp1.sln";
+            this.textBoxPath.Text = "C:\\Users\\user\\source\\repos\\ConsoleApp1\\ConsoleApp1.sln";
             // 
             // buttonStart
             // 
