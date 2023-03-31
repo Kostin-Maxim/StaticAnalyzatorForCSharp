@@ -11,9 +11,9 @@
         public Settings() {
             // // Для добавления обработчиков событий для сохранения и изменения параметров раскомментируйте приведенные ниже строки:
             //
-            // this.SettingChanging += this.SettingChangingEventHandler;
+            //this.SettingChanging += this.SettingChangingEventHandler;
             //
-            // this.SettingsSaving += this.SettingsSavingEventHandler;
+            //this.SettingsSaving += this.SettingsSavingEventHandler;
             //
         }
         

@@ -20,10 +20,16 @@ namespace StaticAnalyzatorForCSharp
         public SettingsForm()
         {
             InitializeComponent();
-            settingsForm = this;    // Поменять здесь добавление элементов не из Енама, а из Настроек 
-            foreach(var ruleName in Enum.GetValues(typeof(SettingsRules.NamesErrors)))
-            { 
-                checkedListBox1.Items.Add(ruleName);
+            settingsForm = this;
+            
+            foreach(var ruleName in Properties.Settings.Default.PropertyValues)
+            {
+                var newElement = (SettingsPropertyValue)ruleName;
+                var stringCheckList = checkedListBox1.Items.Add(newElement.Name);
+                if ((bool)newElement.PropertyValue == true)
+                {
+                    checkedListBox1.SetItemChecked(stringCheckList, true);
+                }
             }
         }
 
@@ -103,27 +109,53 @@ namespace StaticAnalyzatorForCSharp
 
         private void ButtonSaveSettings(object sender, EventArgs e)
         {
-            bool flag = false;
             foreach (var nameFromEnum in checkedListBox1.CheckedItems)
             {
-                if (flag)
+                foreach (var rule in Properties.Settings.Default.PropertyValues)
                 {
-                    flag = false;
-                    continue;
-                }
-
-                foreach (var qwer in Properties.Settings.Default.Properties)
-                {
-                    if(nameFromEnum.ToString() == ((SettingsProperty)qwer).Name.ToString())
+                    var currentRule = (SettingsPropertyValue)rule;
+                    if (nameFromEnum.ToString() == currentRule.Name)
                     {
-                        ((SettingsProperty)qwer).DefaultValue = true;
-                        flag = true;
+                        currentRule.PropertyValue = true;
                         break;
                     }
                 }
             }
+            bool flagCheck = false;
+            foreach (var item in checkedListBox1.Items)
+            {
+                foreach (var checkItem in checkedListBox1.CheckedItems)
+                {
+                    if (item != checkItem)
+                    {
+                        continue;
+                    }                       
+                    else
+                    {
+                        flagCheck = true;
+                        break;
+                    }
+                }
 
+                if (flagCheck)
+                {
+                    continue;
+                }
+                else
+                {
+                    foreach (var rule in Properties.Settings.Default.PropertyValues)
+                    {
+                        var currentRule = (SettingsPropertyValue)rule;
+                        if (item.ToString() == currentRule.Name)
+                        {
+                            currentRule.PropertyValue = false;
+                            break;
+                        }
+                    }
+                }
+            }
 
+            Properties.Settings.Default.Save();
             CloseWindowSettigs();
             settingsForm.Close();
         }

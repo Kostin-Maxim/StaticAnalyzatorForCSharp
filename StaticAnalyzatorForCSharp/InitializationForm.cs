@@ -22,6 +22,7 @@ namespace StaticAnalyzatorForCSharp
         {
             InitializeComponent();
             mainForm = this;
+            Properties.Settings.Default.isLowerSymbolInVariableMessage = true; //Костыль. Без него не выводится список настроек
         }
 
         private void InitializeComponent()

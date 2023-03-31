@@ -29,7 +29,8 @@ namespace StaticAnalyzatorForCSharp
             const string isLowerSymbolInVariableMessage =
                 "Переменная: '{0}' объявлена с заглавной буквы. Файл: {1}, строка: {2}";
 
-            MSBuildLocator.RegisterDefaults();
+            if (!MSBuildLocator.IsRegistered) 
+                MSBuildLocator.RegisterDefaults();
             using (var workspace = MSBuildWorkspace.Create())
             {
                 int counterWarnings = 0;
