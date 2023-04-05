@@ -1,6 +1,7 @@
 ﻿using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System;
 using System.IO;
+using System.Threading;
 using System.Windows.Forms;
 
 namespace StaticAnalyzatorForCSharp
@@ -164,7 +165,9 @@ namespace StaticAnalyzatorForCSharp
             {
                 if (File.Exists(textBoxPath.Text))
                 {
-                    TestingStaticAnalyzator.Start(textBoxPath.Text, ref listBox1);
+                    new Thread(() =>
+                        TestingStaticAnalyzator.Start(textBoxPath.Text, listBox1)).Start();
+                    
                 }
                 else
                 {

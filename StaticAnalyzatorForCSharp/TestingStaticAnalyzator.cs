@@ -5,18 +5,21 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.MSBuild;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Reflection.Metadata;
 using System.Text;
-using System.Threading.Tasks;
+using System.Threading;
 using System.Windows.Forms;
+using System.Xml.Linq;
 
 namespace StaticAnalyzatorForCSharp
 {
     internal class TestingStaticAnalyzator
     {
-        public static void Start(string path, ref ListBox listWarnings)
+        private static MSBuildWorkspace workspace;
+        public static void Start(string path, ListBox listWarnings)
         {
             StringBuilder warnings = new StringBuilder();
 
@@ -28,10 +31,11 @@ namespace StaticAnalyzatorForCSharp
                 "Метод: '{0}' объявлена с маленькой буквы. Файл: {1}, строка: {2}";
             const string isLowerSymbolInVariableMessage =
                 "Переменная: '{0}' объявлена с заглавной буквы. Файл: {1}, строка: {2}";
+                     if(!MSBuildLocator.IsRegistered)
+                        MSBuildLocator.RegisterDefaults();
 
-            if (!MSBuildLocator.IsRegistered) 
-                MSBuildLocator.RegisterDefaults();
-            using (var workspace = MSBuildWorkspace.Create())
+
+            using (workspace = MSBuildWorkspace.Create())
             {
                 int counterWarnings = 0;
                 Project currProject = GetProjectFromSolution(path, workspace);
@@ -52,10 +56,7 @@ namespace StaticAnalyzatorForCSharp
                                 int lineNumber = ifStatement.GetLocation()
                                                             .GetLineSpan()
                                                             .StartLinePosition.Line + 1;
-
-                                listWarnings.Items.Add(String.Format(counterWarnings + ". " + ifWarningMessage,
-                                                                  document.FilePath,
-                                                                  lineNumber));
+                                listWarnings.Invoke(new Action(() => ListboxStringsAdd(listWarnings, counterWarnings, ifWarningMessage, document.FilePath, lineNumber)));
                             }
                         }
                     }
@@ -63,8 +64,8 @@ namespace StaticAnalyzatorForCSharp
                     if (SettingsRules.GetDictionary(SettingsRules.NamesErrors.isThrowWarningMessage))
                     {
                         var throwStatementNodes = tree.GetRoot()
-                                                   .DescendantNodes()
-                                                   .OfType<ObjectCreationExpressionSyntax>();
+                                                      .DescendantNodes()
+                                                      .OfType<ObjectCreationExpressionSyntax>();
                         Compilation compilation = currProject.GetCompilationAsync().Result;
                         foreach (var throwStatement in throwStatementNodes)
                         {
@@ -72,12 +73,10 @@ namespace StaticAnalyzatorForCSharp
                             {
                                 counterWarnings++;
                                 int lineNumber = throwStatement.GetLocation()
-                                .GetLineSpan()
-                                .StartLinePosition.Line + 1;
+                                                               .GetLineSpan()
+                                                               .StartLinePosition.Line + 1;
 
-                                listWarnings.Items.Add(String.Format(counterWarnings + ". " + isThrowWarningMessage,
-                                                                  document.FilePath,
-                                                                  lineNumber));
+                                listWarnings.Invoke(new Action(() => ListboxStringsAdd(listWarnings, counterWarnings, isThrowWarningMessage, document.FilePath, lineNumber)));
                             }
                         }
                     }
@@ -93,13 +92,10 @@ namespace StaticAnalyzatorForCSharp
                             {
                                 counterWarnings++;
                                 int lineNumber = methodDeclaration.GetLocation()
-                                .GetLineSpan()
-                                .StartLinePosition.Line + 1;
+                                                                  .GetLineSpan()
+                                                                  .StartLinePosition.Line + 1;
 
-                                listWarnings.Items.Add(String.Format(counterWarnings + ". " + isUpperSymbolInMethodMessage,
-                                                                  methodName,
-                                                                  document.FilePath,
-                                                                  lineNumber));
+                                listWarnings.Invoke(new Action(() => ListboxStringsAdd(listWarnings, counterWarnings, isUpperSymbolInMethodMessage, methodName, document.FilePath, lineNumber)));
                             }
                         }
                     }
@@ -118,17 +114,24 @@ namespace StaticAnalyzatorForCSharp
                                 .GetLineSpan()
                                 .StartLinePosition.Line + 1;
 
-                                listWarnings.Items.Add(String.Format(counterWarnings + ". " + isLowerSymbolInVariableMessage,
-                                                                  methodName,
-                                                                  document.FilePath,
-                                                                  lineNumber));
+                                listWarnings.Invoke(new Action(() => ListboxStringsAdd(listWarnings, counterWarnings, isLowerSymbolInVariableMessage, methodName, document.FilePath, lineNumber)));
                             }
                         }
                     } 
                 }
             }
         }
-        
+
+        static void ListboxStringsAdd(ListBox listWarnings, int counter, string ruleMessage, string path, int lineNumber) 
+        {
+            listWarnings.Items.Add(String.Format(counter + ". " + ruleMessage, path, lineNumber));
+        }
+
+        static void ListboxStringsAdd(ListBox listWarnings, int counter, string ruleMessage, string methodName, string path, int lineNumber)
+        {
+            listWarnings.Items.Add(String.Format(counter + ". " + ruleMessage, methodName, path, lineNumber));
+        }
+
         static Project GetProjectFromSolution(String solutionPath,
                                       MSBuildWorkspace workspace)
         {
