@@ -109,6 +109,12 @@ namespace StaticAnalyzatorForCSharp
 
         private void ButtonSaveSettings(object sender, EventArgs e)
         {
+            List<string> listNotSelected = new List<string>();
+            foreach (var item in checkedListBox1.Items)
+            {
+                listNotSelected.Add(item.ToString());
+            }
+          
             foreach (var nameFromEnum in checkedListBox1.CheckedItems)
             {
                 foreach (var rule in Properties.Settings.Default.PropertyValues)
@@ -116,45 +122,43 @@ namespace StaticAnalyzatorForCSharp
                     var currentRule = (SettingsPropertyValue)rule;
                     if (nameFromEnum.ToString() == currentRule.Name)
                     {
+                        foreach (var item in Enum.GetValues(typeof(SettingsRules.NamesErrors)))
+                        {
+                            if (item.ToString() == currentRule.Name)
+                            {
+                                SettingsRules.SetDictionary((SettingsRules.NamesErrors)item, true);
+                            }
+                        }
                         currentRule.PropertyValue = true;
+                        listNotSelected.Remove(currentRule.Name);
                         break;
                     }
                 }
             }
-            bool flagCheck = false;
-            foreach (var item in checkedListBox1.Items)
-            {
-                foreach (var checkItem in checkedListBox1.CheckedItems)
-                {
-                    if (item != checkItem)
-                    {
-                        continue;
-                    }                       
-                    else
-                    {
-                        flagCheck = true;
-                        break;
-                    }
-                }
 
-                if (flagCheck)
-                {
-                    continue;
-                }
-                else
+            if (listNotSelected.Count != 0)
+            {
+                foreach (var nameFromEnum in listNotSelected)
                 {
                     foreach (var rule in Properties.Settings.Default.PropertyValues)
                     {
                         var currentRule = (SettingsPropertyValue)rule;
-                        if (item.ToString() == currentRule.Name)
+                        if (nameFromEnum == currentRule.Name)
                         {
+                            foreach (var item in Enum.GetValues(typeof(SettingsRules.NamesErrors)))
+                            {
+                                if (item.ToString() == currentRule.Name)
+                                {
+                                    SettingsRules.SetDictionary((SettingsRules.NamesErrors)item, false);
+                                }
+                            }
                             currentRule.PropertyValue = false;
                             break;
                         }
                     }
                 }
             }
-
+            
             Properties.Settings.Default.Save();
             CloseWindowSettigs();
             settingsForm.Close();
