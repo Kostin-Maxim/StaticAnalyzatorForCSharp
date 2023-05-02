@@ -28,6 +28,7 @@ namespace StaticAnalyzatorForCSharp
 
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(InitializationForm));
             this.textBoxPath = new System.Windows.Forms.TextBox();
             this.buttonStart = new System.Windows.Forms.Button();
             this.buttonSearchPath = new System.Windows.Forms.Button();
@@ -58,7 +59,7 @@ namespace StaticAnalyzatorForCSharp
             this.buttonStart.Name = "buttonStart";
             this.buttonStart.Size = new System.Drawing.Size(123, 23);
             this.buttonStart.TabIndex = 1;
-            this.buttonStart.Text = "button1";
+            this.buttonStart.Text = "Старт";
             this.buttonStart.UseVisualStyleBackColor = true;
             this.buttonStart.Click += new System.EventHandler(this.ButtonStartAnalysis);
             // 
@@ -68,7 +69,7 @@ namespace StaticAnalyzatorForCSharp
             this.buttonSearchPath.Name = "buttonSearchPath";
             this.buttonSearchPath.Size = new System.Drawing.Size(123, 21);
             this.buttonSearchPath.TabIndex = 2;
-            this.buttonSearchPath.Text = "button2";
+            this.buttonSearchPath.Text = "Обзор";
             this.buttonSearchPath.UseVisualStyleBackColor = true;
             this.buttonSearchPath.Click += new System.EventHandler(this.ButtonSearchPath);
             // 
@@ -143,7 +144,9 @@ namespace StaticAnalyzatorForCSharp
             // 
             this.ClientSize = new System.Drawing.Size(784, 261);
             this.Controls.Add(this.splitContainer1);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "InitializationForm";
+            this.Text = "Статистический анализатор языка C#";
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();

@@ -19,8 +19,16 @@ namespace StaticAnalyzatorForCSharp
     internal class TestingStaticAnalyzator
     {
         private static MSBuildWorkspace workspace;
+        private static VisualStudioInstance visualStudioInstance;
+        
         public static void Start(string path, ListBox listWarnings)
         {
+            if (MSBuildLocator.IsRegistered)
+            {
+                MSBuildLocator.Unregister();
+                visualStudioInstance = null;
+            } else
+            visualStudioInstance = MSBuildLocator.RegisterDefaults();
             StringBuilder warnings = new StringBuilder();
 
             const string ifWarningMessage =
@@ -31,8 +39,9 @@ namespace StaticAnalyzatorForCSharp
                 "Метод: '{0}' объявлена с маленькой буквы. Файл: {1}, строка: {2}";
             const string isLowerSymbolInVariableMessage =
                 "Переменная: '{0}' объявлена с заглавной буквы. Файл: {1}, строка: {2}";
-                     if(!MSBuildLocator.IsRegistered)
-                        MSBuildLocator.RegisterDefaults();
+
+                        
+            //MSBuildLocator.RegisterDefaults();
 
 
             using (workspace = MSBuildWorkspace.Create())
@@ -57,7 +66,7 @@ namespace StaticAnalyzatorForCSharp
                                                             .GetLineSpan()
                                                             .StartLinePosition.Line + 1;
                                 listWarnings.Invoke(new Action(() => ListboxStringsAdd(listWarnings, counterWarnings, ifWarningMessage, document.FilePath, lineNumber)));
-                            }
+                            } 
                         }
                     }
 
