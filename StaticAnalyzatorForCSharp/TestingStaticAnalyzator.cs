@@ -5,9 +5,11 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.MSBuild;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
+using System.Reflection.Emit;
 using System.Reflection.Metadata;
 using System.Text;
 using System.Threading;
@@ -19,7 +21,8 @@ namespace StaticAnalyzatorForCSharp
     internal class TestingStaticAnalyzator
     {
         private static MSBuildWorkspace workspace;
-        
+        private static int progressBar;
+
         public static void Start(string path, ListBox listWarnings)
         {
             //workspace = null;
@@ -40,6 +43,15 @@ namespace StaticAnalyzatorForCSharp
 
             using (workspace = MSBuildWorkspace.Create())
             {
+                int countWarningsForProgressBar = 0;
+
+                foreach (var rule in Properties.Settings.Default.PropertyValues)
+                {
+                    var currentRule = (SettingsPropertyValue)rule;
+                    if ((bool)currentRule.PropertyValue)
+                        countWarningsForProgressBar++;
+                }
+
                 int counterWarnings = 0;
                 Project currProject = GetProjectFromSolution(path, workspace);
                 foreach (var document in currProject.Documents)
@@ -60,9 +72,13 @@ namespace StaticAnalyzatorForCSharp
                                                             .GetLineSpan()
                                                             .StartLinePosition.Line + 1;
                                 listWarnings.Invoke(new Action(() => ListboxStringsAdd(listWarnings, counterWarnings, ifWarningMessage, document.FilePath, lineNumber)));
-                            } 
+                            }
                         }
+
+                        progressBar += 100 / countWarningsForProgressBar;
                     }
+
+                    progressBar += progressBar + 1;
 
                     if (SettingsRules.GetDictionary(SettingsRules.NamesErrors.isThrowWarningMessage))
                     {
@@ -82,6 +98,8 @@ namespace StaticAnalyzatorForCSharp
                                 listWarnings.Invoke(new Action(() => ListboxStringsAdd(listWarnings, counterWarnings, isThrowWarningMessage, document.FilePath, lineNumber)));
                             }
                         }
+
+                        progressBar += 100 / countWarningsForProgressBar;
                     }
 
                     if (SettingsRules.GetDictionary(SettingsRules.NamesErrors.isUpperSymbolInMethodMessage))
@@ -101,6 +119,8 @@ namespace StaticAnalyzatorForCSharp
                                 listWarnings.Invoke(new Action(() => ListboxStringsAdd(listWarnings, counterWarnings, isUpperSymbolInMethodMessage, methodName, document.FilePath, lineNumber)));
                             }
                         }
+
+                        progressBar += 100 / countWarningsForProgressBar;
                     }
 
                     if (SettingsRules.GetDictionary(SettingsRules.NamesErrors.isLowerSymbolInVariableMessage))
@@ -120,12 +140,14 @@ namespace StaticAnalyzatorForCSharp
                                 listWarnings.Invoke(new Action(() => ListboxStringsAdd(listWarnings, counterWarnings, isLowerSymbolInVariableMessage, methodName, document.FilePath, lineNumber)));
                             }
                         }
-                    } 
+
+                        progressBar += 100 / countWarningsForProgressBar;
+                    }
                 }
             }
         }
 
-        static void ListboxStringsAdd(ListBox listWarnings, int counter, string ruleMessage, string path, int lineNumber) 
+        static void ListboxStringsAdd(ListBox listWarnings, int counter, string ruleMessage, string path, int lineNumber)
         {
             listWarnings.Items.Add(String.Format(counter + ". " + ruleMessage, path, lineNumber));
         }
@@ -141,6 +163,16 @@ namespace StaticAnalyzatorForCSharp
             Solution currSolution = workspace.OpenSolutionAsync(solutionPath)
                                              .Result;
             return currSolution.Projects.Single();
+        }
+
+        internal static void StartProgressBar(ProgressBar progress)
+        {
+            while (progressBar < 100)
+            {
+                if (progressBar > 100)
+                    break;
+                progress.Invoke(new Action(() => progress.Value = progressBar));
+            }
         }
     }
 }
