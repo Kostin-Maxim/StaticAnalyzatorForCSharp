@@ -19,17 +19,10 @@ namespace StaticAnalyzatorForCSharp
     internal class TestingStaticAnalyzator
     {
         private static MSBuildWorkspace workspace;
-        private static VisualStudioInstance visualStudioInstance;
         
         public static void Start(string path, ListBox listWarnings)
         {
-            if (MSBuildLocator.IsRegistered)
-            {
-                MSBuildLocator.Unregister();
-                visualStudioInstance = null;
-            } else
-            visualStudioInstance = MSBuildLocator.RegisterDefaults();
-            StringBuilder warnings = new StringBuilder();
+            //workspace = null;
 
             const string ifWarningMessage =
                 "if и else приводят к одному результату! Файл: {0}, строка: {1}";
@@ -40,9 +33,10 @@ namespace StaticAnalyzatorForCSharp
             const string isLowerSymbolInVariableMessage =
                 "Переменная: '{0}' объявлена с заглавной буквы. Файл: {1}, строка: {2}";
 
-                        
-            //MSBuildLocator.RegisterDefaults();
-
+            if (!MSBuildLocator.IsRegistered)
+            {
+                MSBuildLocator.RegisterDefaults();
+            }
 
             using (workspace = MSBuildWorkspace.Create())
             {

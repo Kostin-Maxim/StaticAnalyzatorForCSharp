@@ -23,7 +23,7 @@ namespace StaticAnalyzatorForCSharp
         {
             InitializeComponent();
             mainForm = this;
-            Properties.Settings.Default.isLowerSymbolInVariableMessage = true; //Костыль. Без него не выводится список настроек
+            Properties.Settings.Default.isLowerSymbolInVariableMessage = Properties.Settings.Default.isLowerSymbolInVariableMessage; //Костыль. Без него не выводится список настроек
         }
 
         private void InitializeComponent()
@@ -47,14 +47,18 @@ namespace StaticAnalyzatorForCSharp
             // 
             // textBoxPath
             // 
+            this.textBoxPath.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.textBoxPath.Location = new System.Drawing.Point(3, 3);
             this.textBoxPath.Name = "textBoxPath";
-            this.textBoxPath.Size = new System.Drawing.Size(633, 20);
+            this.textBoxPath.Size = new System.Drawing.Size(645, 20);
             this.textBoxPath.TabIndex = 0;
             this.textBoxPath.Text = "C:\\Users\\user\\source\\repos\\ConsoleApp1\\ConsoleApp1.sln";
             // 
             // buttonStart
             // 
+            this.buttonStart.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonStart.Location = new System.Drawing.Point(3, 41);
             this.buttonStart.Name = "buttonStart";
             this.buttonStart.Size = new System.Drawing.Size(123, 23);
@@ -65,6 +69,8 @@ namespace StaticAnalyzatorForCSharp
             // 
             // buttonSearchPath
             // 
+            this.buttonSearchPath.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonSearchPath.Location = new System.Drawing.Point(3, 3);
             this.buttonSearchPath.Name = "buttonSearchPath";
             this.buttonSearchPath.Size = new System.Drawing.Size(123, 21);
@@ -107,10 +113,13 @@ namespace StaticAnalyzatorForCSharp
             // 
             // listBox1
             // 
-            this.listBox1.FormattingEnabled = true;
+            this.listBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.listBox1.HorizontalScrollbar = true;
             this.listBox1.Location = new System.Drawing.Point(3, 30);
             this.listBox1.Name = "listBox1";
-            this.listBox1.Size = new System.Drawing.Size(633, 225);
+            this.listBox1.Size = new System.Drawing.Size(645, 225);
             this.listBox1.TabIndex = 1;
             // 
             // tableLayoutPanel3
@@ -132,6 +141,8 @@ namespace StaticAnalyzatorForCSharp
             // 
             // buttonSettings
             // 
+            this.buttonSettings.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonSettings.Location = new System.Drawing.Point(3, 88);
             this.buttonSettings.Name = "buttonSettings";
             this.buttonSettings.Size = new System.Drawing.Size(123, 23);
@@ -145,6 +156,7 @@ namespace StaticAnalyzatorForCSharp
             this.ClientSize = new System.Drawing.Size(784, 261);
             this.Controls.Add(this.splitContainer1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.MinimumSize = new System.Drawing.Size(800, 300);
             this.Name = "InitializationForm";
             this.Text = "Статистический анализатор языка C#";
             this.splitContainer1.Panel1.ResumeLayout(false);
@@ -168,6 +180,7 @@ namespace StaticAnalyzatorForCSharp
             {
                 if (File.Exists(textBoxPath.Text))
                 {
+                    listBox1.Items.Clear();
                     new Thread(() =>
                         TestingStaticAnalyzator.Start(textBoxPath.Text, listBox1)).Start();
                     
