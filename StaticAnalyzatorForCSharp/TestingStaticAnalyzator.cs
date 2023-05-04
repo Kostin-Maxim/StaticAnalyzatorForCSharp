@@ -53,6 +53,7 @@ namespace StaticAnalyzatorForCSharp
                 }
 
                 int counterWarnings = 0;
+                progressBar = 15;
                 Project currProject = GetProjectFromSolution(path, workspace);
                 foreach (var document in currProject.Documents)
                 {
@@ -76,7 +77,7 @@ namespace StaticAnalyzatorForCSharp
                         }
 
                         if (ifStatementNodes.Count() != 0)
-                            progressBar += (double)100 / countWarningsForProgressBar;
+                            progressBar = (double)100 / countWarningsForProgressBar;
                     }
 
                     if (SettingsRules.GetDictionary(SettingsRules.NamesErrors.isThrowWarningMessage))
@@ -147,17 +148,17 @@ namespace StaticAnalyzatorForCSharp
             }
         }
 
-        static void ListboxStringsAdd(ListBox listWarnings, int counter, string ruleMessage, string path, int lineNumber)
+        private static void ListboxStringsAdd(ListBox listWarnings, int counter, string ruleMessage, string path, int lineNumber)
         {
             listWarnings.Items.Add(String.Format(counter + ". " + ruleMessage, path, lineNumber));
         }
 
-        static void ListboxStringsAdd(ListBox listWarnings, int counter, string ruleMessage, string methodName, string path, int lineNumber)
+        private static void ListboxStringsAdd(ListBox listWarnings, int counter, string ruleMessage, string methodName, string path, int lineNumber)
         {
             listWarnings.Items.Add(String.Format(counter + ". " + ruleMessage, methodName, path, lineNumber));
         }
 
-        static Project GetProjectFromSolution(String solutionPath,
+        private static Project GetProjectFromSolution(String solutionPath,
                                       MSBuildWorkspace workspace)
         {
             Solution currSolution = workspace.OpenSolutionAsync(solutionPath)

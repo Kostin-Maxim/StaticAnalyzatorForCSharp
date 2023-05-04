@@ -234,11 +234,12 @@ namespace StaticAnalyzatorForCSharp
 
         private void ButtonSearchPath(object sender, EventArgs e)
         {
-            OpenFileDialog openFileDialog = new OpenFileDialog();
-            openFileDialog.Filter = "SLN-файлы(*.sln)|*.sln";
-            openFileDialog.CheckFileExists = true;
-            openFileDialog.Multiselect = true;
-            openFileDialog.Multiselect = true;
+            OpenFileDialog openFileDialog = new OpenFileDialog
+            {
+                Filter = "SLN-файлы(*.sln)|*.sln",
+                CheckFileExists = true,
+                Multiselect = true
+            };
 
             if (openFileDialog.ShowDialog() == DialogResult.OK)
             {

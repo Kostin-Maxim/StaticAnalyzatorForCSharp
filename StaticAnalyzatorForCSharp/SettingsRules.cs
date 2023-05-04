@@ -18,7 +18,7 @@ namespace StaticAnalyzatorForCSharp
             isLowerSymbolInVariableMessage
         }
 
-        private static Dictionary<NamesErrors, bool> rules = new Dictionary<NamesErrors, bool>()
+        private static readonly Dictionary<NamesErrors, bool> rules = new Dictionary<NamesErrors, bool>()
         {
             {NamesErrors.ifWarningMessage, GetValueSetting(NamesErrors.ifWarningMessage) },
             {NamesErrors.isThrowWarningMessage, GetValueSetting(NamesErrors.isThrowWarningMessage) },
