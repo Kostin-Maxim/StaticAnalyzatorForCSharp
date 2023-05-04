@@ -180,7 +180,6 @@ namespace StaticAnalyzatorForCSharp
             this.progressBar.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.progressBar.Location = new System.Drawing.Point(3, 211);
-            this.progressBar.Maximum = 150;
             this.progressBar.Name = "progressBar";
             this.progressBar.Size = new System.Drawing.Size(123, 44);
             this.progressBar.Style = System.Windows.Forms.ProgressBarStyle.Continuous;

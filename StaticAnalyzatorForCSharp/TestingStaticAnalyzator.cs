@@ -21,7 +21,7 @@ namespace StaticAnalyzatorForCSharp
     internal class TestingStaticAnalyzator
     {
         private static MSBuildWorkspace workspace;
-        private static int progressBar;
+        private static double progressBar;
 
         public static void Start(string path, ListBox listWarnings)
         {
@@ -75,10 +75,9 @@ namespace StaticAnalyzatorForCSharp
                             }
                         }
 
-                        progressBar += 100 / countWarningsForProgressBar;
+                        if (ifStatementNodes.Count() != 0)
+                            progressBar += (double)100 / countWarningsForProgressBar;
                     }
-
-                    progressBar += progressBar + 1;
 
                     if (SettingsRules.GetDictionary(SettingsRules.NamesErrors.isThrowWarningMessage))
                     {
@@ -98,8 +97,8 @@ namespace StaticAnalyzatorForCSharp
                                 listWarnings.Invoke(new Action(() => ListboxStringsAdd(listWarnings, counterWarnings, isThrowWarningMessage, document.FilePath, lineNumber)));
                             }
                         }
-
-                        progressBar += 100 / countWarningsForProgressBar;
+                        if (throwStatementNodes.Count() != 0)
+                            progressBar += (double)100 / countWarningsForProgressBar;
                     }
 
                     if (SettingsRules.GetDictionary(SettingsRules.NamesErrors.isUpperSymbolInMethodMessage))
@@ -120,7 +119,8 @@ namespace StaticAnalyzatorForCSharp
                             }
                         }
 
-                        progressBar += 100 / countWarningsForProgressBar;
+                        if (methodStatementNodes.Count() != 0)
+                            progressBar += (double)100 / countWarningsForProgressBar;
                     }
 
                     if (SettingsRules.GetDictionary(SettingsRules.NamesErrors.isLowerSymbolInVariableMessage))
@@ -140,8 +140,8 @@ namespace StaticAnalyzatorForCSharp
                                 listWarnings.Invoke(new Action(() => ListboxStringsAdd(listWarnings, counterWarnings, isLowerSymbolInVariableMessage, methodName, document.FilePath, lineNumber)));
                             }
                         }
-
-                        progressBar += 100 / countWarningsForProgressBar;
+                        if (variableStatementsNodes.Count() != 0)
+                            progressBar += (double)100 / countWarningsForProgressBar;
                     }
                 }
             }
@@ -167,11 +167,12 @@ namespace StaticAnalyzatorForCSharp
 
         internal static void StartProgressBar(ProgressBar progress)
         {
-            while (progressBar < 100)
+            while (progressBar <= 100)
             {
-                if (progressBar > 100)
+                progress.Invoke(new Action(() => progress.Value = (int)progressBar));
+
+                if (progressBar == 100)
                     break;
-                progress.Invoke(new Action(() => progress.Value = progressBar));
             }
         }
     }
