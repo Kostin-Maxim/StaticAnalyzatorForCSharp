@@ -38,8 +38,8 @@ namespace StaticAnalyzatorForCSharp
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
             this.listBox1 = new System.Windows.Forms.ListBox();
             this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
-            this.buttonSettings = new System.Windows.Forms.Button();
             this.buttonSave = new System.Windows.Forms.Button();
+            this.buttonSettings = new System.Windows.Forms.Button();
             this.progressBar = new System.Windows.Forms.ProgressBar();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -55,7 +55,7 @@ namespace StaticAnalyzatorForCSharp
             | System.Windows.Forms.AnchorStyles.Right)));
             this.textBoxPath.Location = new System.Drawing.Point(3, 3);
             this.textBoxPath.Name = "textBoxPath";
-            this.textBoxPath.Size = new System.Drawing.Size(645, 20);
+            this.textBoxPath.Size = new System.Drawing.Size(645, 24);
             this.textBoxPath.TabIndex = 0;
             this.textBoxPath.Text = "C:\\Users\\user\\source\\repos\\ConsoleApp1\\ConsoleApp1.sln";
             // 
@@ -63,9 +63,10 @@ namespace StaticAnalyzatorForCSharp
             // 
             this.buttonStart.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonStart.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.buttonStart.Location = new System.Drawing.Point(3, 55);
             this.buttonStart.Name = "buttonStart";
-            this.buttonStart.Size = new System.Drawing.Size(123, 23);
+            this.buttonStart.Size = new System.Drawing.Size(123, 26);
             this.buttonStart.TabIndex = 1;
             this.buttonStart.Text = "Старт";
             this.buttonStart.UseVisualStyleBackColor = true;
@@ -75,9 +76,10 @@ namespace StaticAnalyzatorForCSharp
             // 
             this.buttonSearchPath.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonSearchPath.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.buttonSearchPath.Location = new System.Drawing.Point(3, 3);
             this.buttonSearchPath.Name = "buttonSearchPath";
-            this.buttonSearchPath.Size = new System.Drawing.Size(123, 21);
+            this.buttonSearchPath.Size = new System.Drawing.Size(123, 26);
             this.buttonSearchPath.TabIndex = 2;
             this.buttonSearchPath.Text = "Обзор";
             this.buttonSearchPath.UseVisualStyleBackColor = true;
@@ -121,6 +123,7 @@ namespace StaticAnalyzatorForCSharp
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.listBox1.HorizontalScrollbar = true;
+            this.listBox1.ItemHeight = 17;
             this.listBox1.Location = new System.Drawing.Point(3, 30);
             this.listBox1.Name = "listBox1";
             this.listBox1.Size = new System.Drawing.Size(645, 225);
@@ -147,45 +150,54 @@ namespace StaticAnalyzatorForCSharp
             this.tableLayoutPanel3.Size = new System.Drawing.Size(129, 261);
             this.tableLayoutPanel3.TabIndex = 2;
             // 
-            // buttonSettings
-            // 
-            this.buttonSettings.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonSettings.Location = new System.Drawing.Point(3, 107);
-            this.buttonSettings.Name = "buttonSettings";
-            this.buttonSettings.Size = new System.Drawing.Size(123, 23);
-            this.buttonSettings.TabIndex = 3;
-            this.buttonSettings.Text = "Настройки";
-            this.buttonSettings.UseVisualStyleBackColor = true;
-            this.buttonSettings.Click += new System.EventHandler(this.ButtonOpenSettingsWindow);
-            // 
             // buttonSave
             // 
             this.buttonSave.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonSave.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.buttonSave.Location = new System.Drawing.Point(3, 159);
             this.buttonSave.Name = "buttonSave";
-            this.buttonSave.Size = new System.Drawing.Size(123, 23);
+            this.buttonSave.Size = new System.Drawing.Size(123, 26);
             this.buttonSave.TabIndex = 4;
             this.buttonSave.Text = "Сохранить";
             this.buttonSave.UseVisualStyleBackColor = true;
+            // 
+            // buttonSettings
+            // 
+            this.buttonSettings.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonSettings.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.buttonSettings.Location = new System.Drawing.Point(3, 107);
+            this.buttonSettings.Name = "buttonSettings";
+            this.buttonSettings.Size = new System.Drawing.Size(123, 26);
+            this.buttonSettings.TabIndex = 3;
+            this.buttonSettings.Text = "Настройки";
+            this.buttonSettings.UseVisualStyleBackColor = true;
+            this.buttonSettings.Click += new System.EventHandler(this.ButtonOpenSettingsWindow);
             // 
             // progressBar
             // 
             this.progressBar.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.progressBar.Location = new System.Drawing.Point(3, 211);
+            this.progressBar.Maximum = 150;
             this.progressBar.Name = "progressBar";
             this.progressBar.Size = new System.Drawing.Size(123, 44);
+            this.progressBar.Style = System.Windows.Forms.ProgressBarStyle.Continuous;
             this.progressBar.TabIndex = 5;
             // 
             // InitializationForm
             // 
+            this.BackColor = System.Drawing.SystemColors.Control;
             this.ClientSize = new System.Drawing.Size(784, 261);
             this.Controls.Add(this.splitContainer1);
+            this.Font = new System.Drawing.Font("Bahnschrift Condensed", 10.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MinimumSize = new System.Drawing.Size(800, 300);
             this.Name = "InitializationForm";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Статистический анализатор языка C#";
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
@@ -218,7 +230,7 @@ namespace StaticAnalyzatorForCSharp
                 {
                     MessageBox.Show("Данного пути не существует!", "Ошибка!", MessageBoxButtons.OK);
                 }
-            }            
+            }
         }
 
         private void ButtonSearchPath(object sender, EventArgs e)
