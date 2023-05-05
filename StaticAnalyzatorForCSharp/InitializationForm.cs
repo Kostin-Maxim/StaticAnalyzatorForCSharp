@@ -224,8 +224,6 @@ namespace StaticAnalyzatorForCSharp
                     OnOffUI();
                     listBox1.Items.Clear();
                     progressBar.Value = 0;
-               //     new Thread(() =>
-               //         TestingStaticAnalyzator.StartProgressBar(progressBar)).Start();
                     Task.Factory.StartNew(() => TestingStaticAnalyzator.StartProgressBar(progressBar)).ContinueWith(t => this.Invoke(new Action(() => OnOffUI())));
                     new Thread(() =>
                         TestingStaticAnalyzator.Start(textBoxPath.Text, listBox1)).Start();
