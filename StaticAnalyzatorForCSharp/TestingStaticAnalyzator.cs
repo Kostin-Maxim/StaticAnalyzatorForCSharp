@@ -25,8 +25,6 @@ namespace StaticAnalyzatorForCSharp
 
         public static void Start(string path, ListBox listWarnings)
         {
-            //workspace = null;
-
             const string ifWarningMessage =
                 "if и else приводят к одному результату! Файл: {0}, строка: {1}";
             const string isThrowWarningMessage =

@@ -2,6 +2,7 @@
 using System;
 using System.IO;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace StaticAnalyzatorForCSharp
@@ -180,9 +181,10 @@ namespace StaticAnalyzatorForCSharp
             this.progressBar.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.progressBar.Location = new System.Drawing.Point(3, 211);
+            this.progressBar.MarqueeAnimationSpeed = 1000;
             this.progressBar.Name = "progressBar";
             this.progressBar.Size = new System.Drawing.Size(123, 44);
-            this.progressBar.Style = System.Windows.Forms.ProgressBarStyle.Continuous;
+            this.progressBar.Style = System.Windows.Forms.ProgressBarStyle.Marquee;
             this.progressBar.TabIndex = 5;
             // 
             // InitializationForm
@@ -219,9 +221,12 @@ namespace StaticAnalyzatorForCSharp
             {
                 if (File.Exists(textBoxPath.Text))
                 {
+                    OnOffUI();
                     listBox1.Items.Clear();
-                    new Thread(() =>
-                        TestingStaticAnalyzator.StartProgressBar(progressBar)).Start();
+                    progressBar.Value = 0;
+               //     new Thread(() =>
+               //         TestingStaticAnalyzator.StartProgressBar(progressBar)).Start();
+                    Task.Factory.StartNew(() => TestingStaticAnalyzator.StartProgressBar(progressBar)).ContinueWith(t => this.Invoke(new Action(() => OnOffUI())));
                     new Thread(() =>
                         TestingStaticAnalyzator.Start(textBoxPath.Text, listBox1)).Start();
                 }
@@ -254,9 +259,18 @@ namespace StaticAnalyzatorForCSharp
             formSettings.Show();
         }
 
-        static internal Form GetMainForm()
+        internal static Form GetMainForm()
         {
             return mainForm;
+        }
+
+        internal void OnOffUI()
+        { 
+            buttonSave.Enabled = !buttonSave.Enabled;
+            buttonSettings.Enabled = !buttonSettings.Enabled;
+            buttonSearchPath.Enabled = !buttonSearchPath.Enabled;
+            buttonStart.Enabled = !buttonStart.Enabled;
+            textBoxPath.Enabled = !textBoxPath.Enabled;
         }
     }
 }
