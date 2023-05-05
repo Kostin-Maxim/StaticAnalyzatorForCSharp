@@ -1,6 +1,7 @@
 ﻿using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System;
 using System.IO;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -11,15 +12,16 @@ namespace StaticAnalyzatorForCSharp
     {
         private Button buttonStart;
         private Button buttonSearchPath;
+        private Button buttonSave;
+        private Button buttonSettings;
+        private Form formSettings;
+        private ListBox listBox1;
+        private ProgressBar progressBar;
         private SplitContainer splitContainer1;
         private TableLayoutPanel tableLayoutPanel2;
         private TableLayoutPanel tableLayoutPanel3;
-        private ListBox listBox1;
-        private Button buttonSettings;
         private TextBox textBoxPath;
-        private Form formSettings;
-        private Button buttonSave;
-        private ProgressBar progressBar;
+
         private static Form mainForm;
 
         public InitializationForm()
@@ -162,6 +164,7 @@ namespace StaticAnalyzatorForCSharp
             this.buttonSave.TabIndex = 4;
             this.buttonSave.Text = "Сохранить";
             this.buttonSave.UseVisualStyleBackColor = true;
+            this.buttonSave.Click += new System.EventHandler(this.ButtonSaveInFile);
             // 
             // buttonSettings
             // 
@@ -269,6 +272,26 @@ namespace StaticAnalyzatorForCSharp
             buttonSearchPath.Enabled = !buttonSearchPath.Enabled;
             buttonStart.Enabled = !buttonStart.Enabled;
             textBoxPath.Enabled = !textBoxPath.Enabled;
+        }
+
+        private void ButtonSaveInFile(object sender, EventArgs e)
+        {
+            SaveFileDialog saveFileDialog = new SaveFileDialog
+            {
+            };
+
+            if (saveFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                string fileName = saveFileDialog.FileName;
+                string fileText = "";
+
+                foreach (var item in listBox1.Items)
+                {
+                    fileText += item.ToString() + '\n';
+                }
+
+                File.WriteAllText(fileName, fileText);
+            }
         }
     }
 }
