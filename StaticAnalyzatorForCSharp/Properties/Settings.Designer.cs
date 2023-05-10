@@ -70,5 +70,29 @@ namespace StaticAnalyzatorForCSharp.Properties {
                 this["isLowerSymbolInVariableMessage"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool logicNotEqualsFormat {
+            get {
+                return ((bool)(this["logicNotEqualsFormat"]));
+            }
+            set {
+                this["logicNotEqualsFormat"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool ifStateEquals {
+            get {
+                return ((bool)(this["ifStateEquals"]));
+            }
+            set {
+                this["ifStateEquals"] = value;
+            }
+        }
     }
 }

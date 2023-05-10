@@ -19,7 +19,7 @@
 
     public static void qwerty()
     {
-
-
+        if (true || true) ;
+        if (true && true) ;
     }
 }

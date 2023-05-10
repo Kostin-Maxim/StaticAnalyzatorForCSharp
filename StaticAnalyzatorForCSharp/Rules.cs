@@ -55,5 +55,20 @@ namespace StaticAnalyzatorForCSharp
             variableName = variableDeclaration.Variables.ToString();
             return variableName.Length != 0 && !char.IsLower(variableName[0]);
         }
+
+        /*internal static bool LogicEqualsFormat(InterpolationFormatClauseSyntax interpolationFormat)
+        {
+            string name = "";
+            if (true)
+                name = "a";
+                name += "b";
+            interpolationFormat.ChildNodes(brac)
+            return false;
+        }*/
+
+        internal static bool IfStateEquals(BinaryExpressionSyntax ifStatement)
+        {
+            return SyntaxFactory.AreEquivalent(ifStatement.Left, ifStatement.Right);
+        }
     }
 }

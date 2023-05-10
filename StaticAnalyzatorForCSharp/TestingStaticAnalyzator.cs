@@ -25,8 +25,6 @@ namespace StaticAnalyzatorForCSharp
 
         public static void Start(string path, ListBox listWarnings)
         {
-            progressBar = 0;
-
             const string ifWarningMessage =
                 "if и else приводят к одному результату! Файл: {0}, строка: {1}";
             const string isThrowWarningMessage =
@@ -35,6 +33,8 @@ namespace StaticAnalyzatorForCSharp
                 "Метод: '{0}' объявлена с маленькой буквы. Файл: {1}, строка: {2}";
             const string isLowerSymbolInVariableMessage =
                 "Переменная: '{0}' объявлена с заглавной буквы. Файл: {1}, строка: {2}";
+            const string ifStateEqualsMessage =
+                "В условие левая и правая части идентичны. Файл: {0}, строка: {1}";
 
             if (!MSBuildLocator.IsRegistered)
             {
@@ -143,6 +143,47 @@ namespace StaticAnalyzatorForCSharp
                         }
                         if (variableStatementsNodes.Count() != 0)
                             progressBar += (double)100 / countWarningsForProgressBar;
+                    }
+
+                    /*if (SettingsRules.GetDictionary(SettingsRules.NamesErrors.logicNotEqualsFormat))
+                    {
+                        var formatNodes = tree.GetRoot()
+                                                    .DescendantNodesAndSelf()
+                                                    .OfType<InterpolationFormatClauseSyntax>();
+                        foreach (var formatNode in formatNodes)
+                        {
+                            if (Rules.LogicEqualsFormat(formatNode))
+                            {
+                                counterWarnings++;
+                                int lineNumber = formatNode.GetLocation()
+                                .GetLineSpan()
+                                .StartLinePosition.Line + 1;
+
+                                listWarnings.Invoke(new Action(() => ListboxStringsAdd(listWarnings, counterWarnings, isLowerSymbolInVariableMessage, document.FilePath, lineNumber)));
+                            }
+                        }
+                    }*/
+
+
+                    if (SettingsRules.GetDictionary(SettingsRules.NamesErrors.ifStateEquals))
+                    {
+                        var binaryStatementNodes = tree.GetRoot()
+                                                   .DescendantNodesAndSelf()
+                                                   .OfType<BinaryExpressionSyntax>();
+                        foreach (var binaryStatement in binaryStatementNodes)
+                        {
+                            if (Rules.IfStateEquals(binaryStatement))
+                            {
+                                counterWarnings++;
+                                int lineNumber = binaryStatement.GetLocation()
+                                                            .GetLineSpan()
+                                                            .StartLinePosition.Line + 1;
+                                listWarnings.Invoke(new Action(() => ListboxStringsAdd(listWarnings, counterWarnings, ifStateEqualsMessage, document.FilePath, lineNumber)));
+                            }
+                        }
+
+                        if (binaryStatementNodes.Count() != 0)
+                            progressBar = (double)100 / countWarningsForProgressBar;
                     }
                 }
             }
