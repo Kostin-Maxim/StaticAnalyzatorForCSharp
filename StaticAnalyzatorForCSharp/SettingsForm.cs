@@ -24,8 +24,18 @@ namespace StaticAnalyzatorForCSharp
             
             foreach(var ruleName in Properties.Settings.Default.PropertyValues)
             {
+                string currentRule = "";
+
                 var newElement = (SettingsPropertyValue)ruleName;
-                var stringCheckList = checkedListBox1.Items.Add(newElement.Name);
+                foreach (var item in SettingsRules.translateErrorsForRussian)
+                {
+                    if (item.Key == newElement.Name)
+                    {
+                        currentRule = item.Value;
+                        break;
+                    }
+                }
+                var stringCheckList = checkedListBox1.Items.Add(currentRule);
                 if ((bool)newElement.PropertyValue == true)
                 {
                     checkedListBox1.SetItemChecked(stringCheckList, true);
@@ -129,7 +139,8 @@ namespace StaticAnalyzatorForCSharp
                 foreach (var rule in Properties.Settings.Default.PropertyValues)
                 {
                     var currentRule = (SettingsPropertyValue)rule;
-                    if (nameFromEnum.ToString() == currentRule.Name)
+
+                    if (nameFromEnum.ToString() == SettingsRules.translateErrorsForRussian[currentRule.Name])
                     {
                         foreach (var item in Enum.GetValues(typeof(SettingsRules.NamesErrors)))
                         {
@@ -139,7 +150,7 @@ namespace StaticAnalyzatorForCSharp
                             }
                         }
                         currentRule.PropertyValue = true;
-                        listNotSelected.Remove(currentRule.Name);
+                        listNotSelected.Remove(SettingsRules.translateErrorsForRussian[currentRule.Name]);
                         break;
                     }
                 }
@@ -152,7 +163,7 @@ namespace StaticAnalyzatorForCSharp
                     foreach (var rule in Properties.Settings.Default.PropertyValues)
                     {
                         var currentRule = (SettingsPropertyValue)rule;
-                        if (nameFromEnum == currentRule.Name)
+                        if (nameFromEnum.ToString() == SettingsRules.translateErrorsForRussian[currentRule.Name])
                         {
                             foreach (var item in Enum.GetValues(typeof(SettingsRules.NamesErrors)))
                             {

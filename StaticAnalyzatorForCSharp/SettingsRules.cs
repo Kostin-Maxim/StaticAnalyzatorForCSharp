@@ -10,6 +10,14 @@ namespace StaticAnalyzatorForCSharp
 {
     internal class SettingsRules
     {
+        public static readonly Dictionary<string, string> translateErrorsForRussian = new Dictionary<string, string>()
+        {
+            {"ifWarningMessage", "Проверка выходных данных констркции if-else" },
+            {"isThrowWarningMessage", "Проверка выделения памяти для исключения" },
+            {"isUpperSymbolInMethodMessage", "Проверка наименование метода" },
+            {"isLowerSymbolInVariableMessage", "Проверка наименования переменной" },
+        };
+
         public enum NamesErrors
         {
             ifWarningMessage,

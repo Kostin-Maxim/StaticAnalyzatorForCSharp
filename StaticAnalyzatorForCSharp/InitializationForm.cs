@@ -227,6 +227,7 @@ namespace StaticAnalyzatorForCSharp
                     OnOffUI();
                     listBox1.Items.Clear();
                     progressBar.Value = 0;
+                    Thread.Sleep(2500);
                     Task.Factory.StartNew(() => TestingStaticAnalyzator.StartProgressBar(progressBar)).ContinueWith(t => this.Invoke(new Action(() => OnOffUI())));
                     new Thread(() =>
                         TestingStaticAnalyzator.Start(textBoxPath.Text, listBox1)).Start();
@@ -276,8 +277,19 @@ namespace StaticAnalyzatorForCSharp
 
         private void ButtonSaveInFile(object sender, EventArgs e)
         {
+            if (listBox1.Items.Count == 0)
+            {
+                MessageBox.Show("Поле вывода ошибок пустое", "Ошибка!", MessageBoxButtons.OK);
+                return;
+            }
+
+
             SaveFileDialog saveFileDialog = new SaveFileDialog
             {
+                Filter = "Текстовые файлы (*.txt)|*.txt|Документ Word (*.doc)|*.doc|Все файлы (*.*)|*.*",
+                CheckFileExists = true,
+                FileName = "Отчет"
+
             };
 
             if (saveFileDialog.ShowDialog() == DialogResult.OK)
