@@ -11,8 +11,9 @@ namespace StaticAnalyzatorForCSharp
             {"isThrowWarningMessage", "Проверка выделения памяти для исключения" },
             {"isUpperSymbolInMethodMessage", "Проверка наименование метода" },
             {"isLowerSymbolInVariableMessage", "Проверка наименования переменной" },
-            {"logicNotEqualsFormat", "Проверка форматирования конструкции if"},
+            {"correctNameVariableInFor", "Проверка на подозрительные циклы"},
             {"ifStateEquals", "Проверка однозначного условия" }
+
         };
 
         public enum NamesErrors
@@ -21,7 +22,7 @@ namespace StaticAnalyzatorForCSharp
             isThrowWarningMessage,
             isUpperSymbolInMethodMessage,
             isLowerSymbolInVariableMessage,
-            logicNotEqualsFormat,
+            correctNameVariableInFor,
             ifStateEquals
         }
 
@@ -31,7 +32,7 @@ namespace StaticAnalyzatorForCSharp
             {NamesErrors.isThrowWarningMessage, GetValueSetting(NamesErrors.isThrowWarningMessage) },
             {NamesErrors.isUpperSymbolInMethodMessage, GetValueSetting(NamesErrors.isUpperSymbolInMethodMessage) },
             {NamesErrors.isLowerSymbolInVariableMessage, GetValueSetting(NamesErrors.isLowerSymbolInVariableMessage) },
-            {NamesErrors.logicNotEqualsFormat, GetValueSetting(NamesErrors.logicNotEqualsFormat) },
+            {NamesErrors.correctNameVariableInFor, GetValueSetting(NamesErrors.correctNameVariableInFor) },
             {NamesErrors.ifStateEquals, GetValueSetting(NamesErrors.ifStateEquals) }
         };
 

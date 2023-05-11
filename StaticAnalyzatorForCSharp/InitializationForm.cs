@@ -182,10 +182,9 @@ namespace StaticAnalyzatorForCSharp
             this.progressBar.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.progressBar.Location = new System.Drawing.Point(3, 211);
-            this.progressBar.MarqueeAnimationSpeed = 1000;
             this.progressBar.Name = "progressBar";
             this.progressBar.Size = new System.Drawing.Size(123, 44);
-            this.progressBar.Style = System.Windows.Forms.ProgressBarStyle.Marquee;
+            this.progressBar.Style = System.Windows.Forms.ProgressBarStyle.Continuous;
             this.progressBar.TabIndex = 5;
             // 
             // InitializationForm
@@ -225,10 +224,8 @@ namespace StaticAnalyzatorForCSharp
                     //OnOffUI();
                     listBox1.Items.Clear();
                     progressBar.Value = 0;
-                    Thread.Sleep(2500);
-                    //Task.Factory.StartNew(() => TestingStaticAnalyzator.StartProgressBar(progressBar)).ContinueWith(t => this.Invoke(new Action(() => OnOffUI())));
-                    new Thread(() =>
-                        TestingStaticAnalyzator.Start(textBoxPath.Text, listBox1)).Start();
+                    Task.Factory.StartNew(() => ProgressBarWork.Start(progressBar)).ContinueWith(t => this.Invoke(new Action(() => OnOffUI())));
+                    new Thread(() => TestingStaticAnalyzator.Start(textBoxPath.Text, listBox1)).Start();
                 }
                 else
                 {

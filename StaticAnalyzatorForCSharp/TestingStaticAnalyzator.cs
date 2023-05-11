@@ -5,6 +5,7 @@ using Microsoft.CodeAnalysis.MSBuild;
 using System;
 using System.Configuration;
 using System.Linq;
+using System.Threading;
 using System.Windows.Forms;
 
 namespace StaticAnalyzatorForCSharp
@@ -53,6 +54,11 @@ namespace StaticAnalyzatorForCSharp
                                 listWarnings.Invoke(new Action(() => ListboxStringsAdd(listWarnings, counterWarnings, NamesMessage.IfWarningMessage, document.FilePath, lineNumber)));
                             }
                         }
+
+                        if (ifStatementNodes.Count() != 0)
+                        {
+                            ProgressBarWork.SetProgress += (double)100 / countWarningsForProgressBar;
+                        }
                     }
 
                     if (SettingsRules.GetDictionary(SettingsRules.NamesErrors.isThrowWarningMessage))
@@ -73,6 +79,11 @@ namespace StaticAnalyzatorForCSharp
                                 listWarnings.Invoke(new Action(() => ListboxStringsAdd(listWarnings, counterWarnings, NamesMessage.IsThrowWarningMessage, document.FilePath, lineNumber)));
                             }
                         }
+
+                        if (throwStatementNodes.Count() != 0)
+                        {
+                            ProgressBarWork.SetProgress += (double)100 / countWarningsForProgressBar;
+                        }
                     }
 
                     if (SettingsRules.GetDictionary(SettingsRules.NamesErrors.isUpperSymbolInMethodMessage))
@@ -91,6 +102,11 @@ namespace StaticAnalyzatorForCSharp
 
                                 listWarnings.Invoke(new Action(() => ListboxStringsAdd(listWarnings, counterWarnings, NamesMessage.IsUpperSymbolInMethodMessage, methodName, document.FilePath, lineNumber)));
                             }
+                        }
+
+                        if (methodStatementNodes.Count() != 0)
+                        {
+                            ProgressBarWork.SetProgress += (double)100 / countWarningsForProgressBar;
                         }
                     }
 
@@ -111,27 +127,36 @@ namespace StaticAnalyzatorForCSharp
                                 listWarnings.Invoke(new Action(() => ListboxStringsAdd(listWarnings, counterWarnings, NamesMessage.IsLowerSymbolInVariableMessage, methodName, document.FilePath, lineNumber)));
                             }
                         }
+
+                        if (variableStatementsNodes.Count() != 0)
+                        {
+                            ProgressBarWork.SetProgress += (double)100 / countWarningsForProgressBar;
+                        }
                     }
 
-                    /*if (SettingsRules.GetDictionary(SettingsRules.NamesErrors.logicNotEqualsFormat))
+                    if (SettingsRules.GetDictionary(SettingsRules.NamesErrors.correctNameVariableInFor))
                     {
                         var formatNodes = tree.GetRoot()
                                                     .DescendantNodesAndSelf()
-                                                    .OfType<InterpolationFormatClauseSyntax>();
+                                                    .OfType<ForStatementSyntax>();
                         foreach (var formatNode in formatNodes)
                         {
-                            if (Rules.LogicEqualsFormat(formatNode))
+                            if (Rules.CorrectNameFor(formatNode))
                             {
                                 counterWarnings++;
                                 int lineNumber = formatNode.GetLocation()
                                 .GetLineSpan()
                                 .StartLinePosition.Line + 1;
 
-                                listWarnings.Invoke(new Action(() => ListboxStringsAdd(listWarnings, counterWarnings, isLowerSymbolInVariableMessage, document.FilePath, lineNumber)));
+                                listWarnings.Invoke(new Action(() => ListboxStringsAdd(listWarnings, counterWarnings, NamesMessage.СorrectNameVariableInForMessage, document.FilePath, lineNumber)));
                             }
                         }
-                    }*/
 
+                        if (formatNodes.Count() != 0)
+                        {
+                            ProgressBarWork.SetProgress += (double)100 / countWarningsForProgressBar;
+                        }
+                    }
 
                     if (SettingsRules.GetDictionary(SettingsRules.NamesErrors.ifStateEquals))
                     {
@@ -148,6 +173,11 @@ namespace StaticAnalyzatorForCSharp
                                                             .StartLinePosition.Line + 1;
                                 listWarnings.Invoke(new Action(() => ListboxStringsAdd(listWarnings, counterWarnings, NamesMessage.IfStateEqualsMessage, document.FilePath, lineNumber)));
                             }
+                        }
+
+                        if (binaryStatementNodes.Count() != 0)
+                        {
+                            ProgressBarWork.SetProgress += (double)100 / countWarningsForProgressBar;
                         }
                     }
                 }

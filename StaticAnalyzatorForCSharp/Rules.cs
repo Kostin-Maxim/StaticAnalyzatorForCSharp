@@ -1,6 +1,7 @@
 ﻿using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using System.Linq;
 
 namespace StaticAnalyzatorForCSharp
 {
@@ -51,15 +52,12 @@ namespace StaticAnalyzatorForCSharp
             return variableName.Length != 0 && !char.IsLower(variableName[0]);
         }
 
-        /*internal static bool LogicEqualsFormat(InterpolationFormatClauseSyntax interpolationFormat)
+        internal static bool CorrectNameFor(ForStatementSyntax interpolationFormat)
         {
-            string name = "";
-            if (true)
-                name = "a";
-                name += "b";
-            interpolationFormat.ChildNodes(brac)
-            return false;
-        }*/
+            var operatorChange = interpolationFormat.Incrementors.ToString().First();
+            var operatorVariable = interpolationFormat.Declaration.Variables.ToString().First();
+            return operatorChange == operatorVariable;
+        }
 
         internal static bool IfStateEquals(BinaryExpressionSyntax ifStatement)
         {
