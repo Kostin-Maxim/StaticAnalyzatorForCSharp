@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace StaticAnalyzatorForCSharp
@@ -128,12 +125,14 @@ namespace StaticAnalyzatorForCSharp
 
         private void ButtonSaveSettings(object sender, EventArgs e)
         {
+            // Создания списка для работы с невыделенными объектами 
             List<string> listNotSelected = new List<string>();
             foreach (var item in checkedListBox1.Items)
             {
                 listNotSelected.Add(item.ToString());
             }
-          
+            
+            // Удаление из созданного списка всех выделенных объектов
             foreach (var nameFromEnum in checkedListBox1.CheckedItems)
             {
                 foreach (var rule in Properties.Settings.Default.PropertyValues)
@@ -156,6 +155,7 @@ namespace StaticAnalyzatorForCSharp
                 }
             }
 
+            // Работа с получившимся списком
             if (listNotSelected.Count != 0)
             {
                 foreach (var nameFromEnum in listNotSelected)

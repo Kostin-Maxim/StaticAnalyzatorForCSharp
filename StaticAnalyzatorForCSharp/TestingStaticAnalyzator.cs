@@ -1,41 +1,20 @@
 ﻿using Microsoft.Build.Locator;
 using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.MSBuild;
 using System;
-using System.Collections.Generic;
 using System.Configuration;
-using System.Diagnostics;
 using System.Linq;
-using System.Reflection;
-using System.Reflection.Emit;
-using System.Reflection.Metadata;
-using System.Text;
-using System.Threading;
 using System.Windows.Forms;
-using System.Xml.Linq;
 
 namespace StaticAnalyzatorForCSharp
 {
     internal class TestingStaticAnalyzator
     {
         private static MSBuildWorkspace workspace;
-        private static double progressBar;
 
         public static void Start(string path, ListBox listWarnings)
         {
-            const string ifWarningMessage =
-                "if и else приводят к одному результату! Файл: {0}, строка: {1}";
-            const string isThrowWarningMessage =
-                "Cоздаётся экземпляр класса, унаследованного от 'System.Exception', но при этом никак не используется! Файл: {0}, строка: {1}";
-            const string isUpperSymbolInMethodMessage =
-                "Метод: '{0}' объявлена с маленькой буквы. Файл: {1}, строка: {2}";
-            const string isLowerSymbolInVariableMessage =
-                "Переменная: '{0}' объявлена с заглавной буквы. Файл: {1}, строка: {2}";
-            const string ifStateEqualsMessage =
-                "В условие левая и правая части идентичны. Файл: {0}, строка: {1}";
-
             if (!MSBuildLocator.IsRegistered)
             {
                 MSBuildLocator.RegisterDefaults();
@@ -53,7 +32,6 @@ namespace StaticAnalyzatorForCSharp
                 }
 
                 int counterWarnings = 0;
-                progressBar = 15;
                 Project currProject = GetProjectFromSolution(path, workspace);
                 foreach (var document in currProject.Documents)
                 {
@@ -72,12 +50,9 @@ namespace StaticAnalyzatorForCSharp
                                 int lineNumber = ifStatement.GetLocation()
                                                             .GetLineSpan()
                                                             .StartLinePosition.Line + 1;
-                                listWarnings.Invoke(new Action(() => ListboxStringsAdd(listWarnings, counterWarnings, ifWarningMessage, document.FilePath, lineNumber)));
+                                listWarnings.Invoke(new Action(() => ListboxStringsAdd(listWarnings, counterWarnings, NamesMessage.IfWarningMessage, document.FilePath, lineNumber)));
                             }
                         }
-
-                        if (ifStatementNodes.Count() != 0)
-                            progressBar = (double)100 / countWarningsForProgressBar;
                     }
 
                     if (SettingsRules.GetDictionary(SettingsRules.NamesErrors.isThrowWarningMessage))
@@ -95,11 +70,9 @@ namespace StaticAnalyzatorForCSharp
                                                                .GetLineSpan()
                                                                .StartLinePosition.Line + 1;
 
-                                listWarnings.Invoke(new Action(() => ListboxStringsAdd(listWarnings, counterWarnings, isThrowWarningMessage, document.FilePath, lineNumber)));
+                                listWarnings.Invoke(new Action(() => ListboxStringsAdd(listWarnings, counterWarnings, NamesMessage.IsThrowWarningMessage, document.FilePath, lineNumber)));
                             }
                         }
-                        if (throwStatementNodes.Count() != 0)
-                            progressBar += (double)100 / countWarningsForProgressBar;
                     }
 
                     if (SettingsRules.GetDictionary(SettingsRules.NamesErrors.isUpperSymbolInMethodMessage))
@@ -116,12 +89,9 @@ namespace StaticAnalyzatorForCSharp
                                                                   .GetLineSpan()
                                                                   .StartLinePosition.Line + 1;
 
-                                listWarnings.Invoke(new Action(() => ListboxStringsAdd(listWarnings, counterWarnings, isUpperSymbolInMethodMessage, methodName, document.FilePath, lineNumber)));
+                                listWarnings.Invoke(new Action(() => ListboxStringsAdd(listWarnings, counterWarnings, NamesMessage.IsUpperSymbolInMethodMessage, methodName, document.FilePath, lineNumber)));
                             }
                         }
-
-                        if (methodStatementNodes.Count() != 0)
-                            progressBar += (double)100 / countWarningsForProgressBar;
                     }
 
                     if (SettingsRules.GetDictionary(SettingsRules.NamesErrors.isLowerSymbolInVariableMessage))
@@ -138,11 +108,9 @@ namespace StaticAnalyzatorForCSharp
                                 .GetLineSpan()
                                 .StartLinePosition.Line + 1;
 
-                                listWarnings.Invoke(new Action(() => ListboxStringsAdd(listWarnings, counterWarnings, isLowerSymbolInVariableMessage, methodName, document.FilePath, lineNumber)));
+                                listWarnings.Invoke(new Action(() => ListboxStringsAdd(listWarnings, counterWarnings, NamesMessage.IsLowerSymbolInVariableMessage, methodName, document.FilePath, lineNumber)));
                             }
                         }
-                        if (variableStatementsNodes.Count() != 0)
-                            progressBar += (double)100 / countWarningsForProgressBar;
                     }
 
                     /*if (SettingsRules.GetDictionary(SettingsRules.NamesErrors.logicNotEqualsFormat))
@@ -178,12 +146,9 @@ namespace StaticAnalyzatorForCSharp
                                 int lineNumber = binaryStatement.GetLocation()
                                                             .GetLineSpan()
                                                             .StartLinePosition.Line + 1;
-                                listWarnings.Invoke(new Action(() => ListboxStringsAdd(listWarnings, counterWarnings, ifStateEqualsMessage, document.FilePath, lineNumber)));
+                                listWarnings.Invoke(new Action(() => ListboxStringsAdd(listWarnings, counterWarnings, NamesMessage.IfStateEqualsMessage, document.FilePath, lineNumber)));
                             }
                         }
-
-                        if (binaryStatementNodes.Count() != 0)
-                            progressBar = (double)100 / countWarningsForProgressBar;
                     }
                 }
             }
@@ -205,17 +170,6 @@ namespace StaticAnalyzatorForCSharp
             Solution currSolution = workspace.OpenSolutionAsync(solutionPath)
                                              .Result;
             return currSolution.Projects.Single();
-        }
-
-        internal static void StartProgressBar(ProgressBar progress)
-        {
-            while (progressBar <= 100)
-            {
-                progress.Invoke(new Action(() => progress.Value = (int)progressBar));
-
-                if (progressBar == 100)
-                    break;
-            }
         }
     }
 }
