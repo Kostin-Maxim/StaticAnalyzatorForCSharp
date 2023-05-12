@@ -14,10 +14,13 @@
     <Setting Name="isLowerSymbolInVariableMessage" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
-    <Setting Name="logicNotEqualsFormat" Type="System.Boolean" Scope="User">
+    <Setting Name="correctNameVariableInFor" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
     <Setting Name="ifStateEquals" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="ifStateImpossible" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
   </Settings>

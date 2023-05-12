@@ -12,7 +12,8 @@ namespace StaticAnalyzatorForCSharp
             {"isUpperSymbolInMethodMessage", "Проверка наименование метода" },
             {"isLowerSymbolInVariableMessage", "Проверка наименования переменной" },
             {"correctNameVariableInFor", "Проверка на подозрительные циклы"},
-            {"ifStateEquals", "Проверка однозначного условия" }
+            {"ifStateEquals", "Проверка однозначного условия" },
+            {"ifStateImpossible", "Проверка на невыполняемое условие" }
 
         };
 
@@ -23,7 +24,8 @@ namespace StaticAnalyzatorForCSharp
             isUpperSymbolInMethodMessage,
             isLowerSymbolInVariableMessage,
             correctNameVariableInFor,
-            ifStateEquals
+            ifStateEquals,
+            ifStateImpossible
         }
 
         private static readonly Dictionary<NamesErrors, bool> rules = new Dictionary<NamesErrors, bool>()
@@ -33,7 +35,8 @@ namespace StaticAnalyzatorForCSharp
             {NamesErrors.isUpperSymbolInMethodMessage, GetValueSetting(NamesErrors.isUpperSymbolInMethodMessage) },
             {NamesErrors.isLowerSymbolInVariableMessage, GetValueSetting(NamesErrors.isLowerSymbolInVariableMessage) },
             {NamesErrors.correctNameVariableInFor, GetValueSetting(NamesErrors.correctNameVariableInFor) },
-            {NamesErrors.ifStateEquals, GetValueSetting(NamesErrors.ifStateEquals) }
+            {NamesErrors.ifStateEquals, GetValueSetting(NamesErrors.ifStateEquals) },
+            {NamesErrors.ifStateImpossible, GetValueSetting(NamesErrors.ifStateImpossible) }
         };
 
         public static void SetDictionary(NamesErrors key, bool value)

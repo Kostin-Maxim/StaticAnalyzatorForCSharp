@@ -74,12 +74,12 @@ namespace StaticAnalyzatorForCSharp.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool logicNotEqualsFormat {
+        public bool correctNameVariableInFor {
             get {
-                return ((bool)(this["logicNotEqualsFormat"]));
+                return ((bool)(this["correctNameVariableInFor"]));
             }
             set {
-                this["logicNotEqualsFormat"] = value;
+                this["correctNameVariableInFor"] = value;
             }
         }
         
@@ -92,6 +92,18 @@ namespace StaticAnalyzatorForCSharp.Properties {
             }
             set {
                 this["ifStateEquals"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool ifStateImpossible {
+            get {
+                return ((bool)(this["ifStateImpossible"]));
+            }
+            set {
+                this["ifStateImpossible"] = value;
             }
         }
     }

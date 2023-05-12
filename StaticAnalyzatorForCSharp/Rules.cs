@@ -18,8 +18,7 @@ namespace StaticAnalyzatorForCSharp
             return SyntaxFactory.AreEquivalent(thenBody, elseBody);
         }
 
-        internal static bool IsMissingThrowOperatorRule(SemanticModel model,
-                               ObjectCreationExpressionSyntax node)
+        internal static bool IsMissingThrowOperatorRule(SemanticModel model, ObjectCreationExpressionSyntax node)
         {
             if (IsReferenceUsed(model, node.Parent))
                 return false;
@@ -27,8 +26,7 @@ namespace StaticAnalyzatorForCSharp
             return true;
         }
 
-        internal static bool IsReferenceUsed(SemanticModel model,
-                     SyntaxNode parentNode)
+        internal static bool IsReferenceUsed(SemanticModel model, SyntaxNode parentNode)
         {
             if (parentNode.IsKind(SyntaxKind.ExpressionStatement))
                 return false;
@@ -62,6 +60,43 @@ namespace StaticAnalyzatorForCSharp
         internal static bool IfStateEquals(BinaryExpressionSyntax ifStatement)
         {
             return SyntaxFactory.AreEquivalent(ifStatement.Left, ifStatement.Right);
+        }
+
+        internal static bool IfStateImpossible(BinaryExpressionSyntax binaryExpression)
+        {
+            string leftStatement = binaryExpression.Left.ToString();
+            string rightStatement = binaryExpression.Right.ToString();
+            if (leftStatement.IndexOfAny(new char[] { '>', '<' }) == -1 || rightStatement.IndexOfAny(new char[] { '>', '<' }) == -1)
+                return true;
+
+            if (leftStatement.Substring(0, leftStatement.IndexOfAny(new char[] { '>', '<' })).Replace(" ", "") == rightStatement.Substring(0, rightStatement.IndexOfAny(new char[] { '>', '<' })).Replace(" ", ""))
+            {
+                string leftNumericString = CuteNumericForString(leftStatement.Substring(leftStatement.IndexOfAny(new char[] { '>', '<' }) + 1));
+                string rightNumericString = CuteNumericForString(rightStatement.Substring(rightStatement.IndexOfAny(new char[] { '>', '<' }) + 1));
+            }
+
+           
+
+
+            
+
+           
+            return true;
+        }
+
+        private static string CuteNumericForString(string stringNum)
+        {
+            string localString = "";
+
+            foreach (var word in stringNum)
+            {
+                if (word > 44 && word < 57)
+                {
+                    localString += word;
+                }
+            }
+
+            return localString;
         }
     }
 }

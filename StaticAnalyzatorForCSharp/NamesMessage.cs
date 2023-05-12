@@ -3,7 +3,7 @@
     internal class NamesMessage
     {
         private const string ifWarningMessage =
-                "if и else приводят к одному результату! Файл: {0}, строка: {1}";
+            "if и else приводят к одному результату! Файл: {0}, строка: {1}";
         private const string isThrowWarningMessage =
             "Cоздаётся экземпляр класса, унаследованного от 'System.Exception', но при этом никак не используется! Файл: {0}, строка: {1}";
         private const string isUpperSymbolInMethodMessage =

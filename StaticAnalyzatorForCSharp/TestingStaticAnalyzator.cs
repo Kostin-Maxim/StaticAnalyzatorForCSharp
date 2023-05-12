@@ -180,6 +180,29 @@ namespace StaticAnalyzatorForCSharp
                             ProgressBarWork.SetProgress += (double)100 / countWarningsForProgressBar;
                         }
                     }
+
+                    if (SettingsRules.GetDictionary(SettingsRules.NamesErrors.ifStateImpossible))
+                    {
+                        var binaryStatementNodes = tree.GetRoot()
+                                                   .DescendantNodesAndSelf()
+                                                   .OfType<BinaryExpressionSyntax>();
+                        foreach (var binaryStatement in binaryStatementNodes)
+                        {
+                            if (Rules.IfStateImpossible(binaryStatement))
+                            {
+                                counterWarnings++;
+                                int lineNumber = binaryStatement.GetLocation()
+                                                            .GetLineSpan()
+                                                            .StartLinePosition.Line + 1;
+                                listWarnings.Invoke(new Action(() => ListboxStringsAdd(listWarnings, counterWarnings, NamesMessage.IfStateEqualsMessage, document.FilePath, lineNumber)));
+                            }
+                        }
+
+                        if (binaryStatementNodes.Count() != 0)
+                        {
+                            ProgressBarWork.SetProgress += (double)100 / countWarningsForProgressBar;
+                        }
+                    }
                 }
             }
         }
