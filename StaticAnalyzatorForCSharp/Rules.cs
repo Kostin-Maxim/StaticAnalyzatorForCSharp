@@ -1,6 +1,8 @@
 ﻿using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using System;
+using System.Globalization;
 using System.Linq;
 
 namespace StaticAnalyzatorForCSharp
@@ -73,6 +75,12 @@ namespace StaticAnalyzatorForCSharp
             {
                 string leftNumericString = CuteNumericForString(leftStatement.Substring(leftStatement.IndexOfAny(new char[] { '>', '<' }) + 1));
                 string rightNumericString = CuteNumericForString(rightStatement.Substring(rightStatement.IndexOfAny(new char[] { '>', '<' }) + 1));
+
+                double maxValue, minValue;
+                CultureInfo ciEnUs = new CultureInfo("en-us");
+
+                maxValue = double.Parse(leftNumericString, ciEnUs) >= double.Parse(rightNumericString, ciEnUs) ? double.Parse(leftNumericString, ciEnUs) : double.Parse(leftNumericString, ciEnUs);
+                minValue = double.Parse(rightNumericString, ciEnUs) >= double.Parse(leftNumericString, ciEnUs) ? double.Parse(rightNumericString, ciEnUs) : double.Parse(leftNumericString, ciEnUs);
             }
 
            
