@@ -2,13 +2,16 @@
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Linq.Expressions;
 
 namespace StaticAnalyzatorForCSharp
 {
     internal class Rules
     {
+        private CultureInfo ciEnUs = new CultureInfo("en-us");
         internal static bool IfElseRule(IfStatementSyntax ifStatement)
         {
             if (ifStatement?.Else == null)
@@ -68,28 +71,164 @@ namespace StaticAnalyzatorForCSharp
         {
             string leftStatement = binaryExpression.Left.ToString();
             string rightStatement = binaryExpression.Right.ToString();
+
             if (leftStatement.IndexOfAny(new char[] { '>', '<' }) == -1 || rightStatement.IndexOfAny(new char[] { '>', '<' }) == -1)
                 return true;
 
-            if (leftStatement.Substring(0, leftStatement.IndexOfAny(new char[] { '>', '<' })).Replace(" ", "") == rightStatement.Substring(0, rightStatement.IndexOfAny(new char[] { '>', '<' })).Replace(" ", ""))
+            // Переменные полученные из условия
+            double leftNumeric = 0;
+            double rightNumeric = 0;
+
+            // Переменны для запоминание знака < >
+            bool isLeftStatementGreater = false;
+            bool isRightStatementGreater = false;
+
+            // Переменны для определения местонахождения числа
+            bool isRightStatementLeft = false;
+            bool isRightStatementRight = false;
+
+            const string greater = "GreaterThanExpression";
+            const string less = "LessThanExpression";
+
+            if (binaryExpression.Left.Kind().ToString() == greater)
             {
-                string leftNumericString = CuteNumericForString(leftStatement.Substring(leftStatement.IndexOfAny(new char[] { '>', '<' }) + 1));
-                string rightNumericString = CuteNumericForString(rightStatement.Substring(rightStatement.IndexOfAny(new char[] { '>', '<' }) + 1));
-
-                double maxValue, minValue;
-                CultureInfo ciEnUs = new CultureInfo("en-us");
-
-                maxValue = double.Parse(leftNumericString, ciEnUs) >= double.Parse(rightNumericString, ciEnUs) ? double.Parse(leftNumericString, ciEnUs) : double.Parse(leftNumericString, ciEnUs);
-                minValue = double.Parse(rightNumericString, ciEnUs) >= double.Parse(leftNumericString, ciEnUs) ? double.Parse(rightNumericString, ciEnUs) : double.Parse(leftNumericString, ciEnUs);
+                AnalysisBorderGreater(binaryExpression.Left.ToString(), ref leftNumeric, ref isRightStatementLeft);
+                isLeftStatementGreater = true;
+            }
+            else if (binaryExpression.Left.Kind().ToString() == less)
+            {
+                AnalysisBorderGreater(binaryExpression.Left.ToString(), ref leftNumeric, ref isRightStatementLeft);
             }
 
-           
+            if (binaryExpression.Right.Kind().ToString() == greater)
+            {
+                AnalysisBorderLess(binaryExpression.Right.ToString(), ref rightNumeric, ref isRightStatementRight);
+                isRightStatementGreater = true;
+            }
+            else if (binaryExpression.Right.Kind().ToString() == less)
+            {
+                AnalysisBorderLess(binaryExpression.Right.ToString(), ref rightNumeric, ref isRightStatementRight);
+            }
 
 
-            
+            if (isLeftStatementGreater == isRightStatementGreater)
+            {
+                if (isRightStatementLeft == isRightStatementRight)
+                {
+                    return true;
+                }
+                else
+                {
+                    if (leftNumeric >= rightNumeric)
+                    {
+                        if (isRightStatementLeft)
+                        {
+                            return true;
+                        }
+                        else 
+                        { 
+                            return false; 
+                        }
+                    }
+                    else if (rightNumeric >= leftNumeric)
+                    {
+                        if (isRightStatementRight)
+                        {
+                            return false;
+                        }
+                        else
+                        {
+                            return true;
+                        }
+                    }
+                }
+            }
+            else 
+            {
+                if (isRightStatementLeft != isRightStatementRight)
+                {
+                    return false;
+                }
+                else
+                {
+                   // if (leftNumeric >= rightNumeric)
+                   // {
+                        if (isRightStatementLeft)
+                        {
+                            if (isLeftStatementGreater)
+                            {
+                                return true;
+                            }
+                            else
+                            {
+                                return false;
+                            }
+                        }
+                        else 
+                        {
+                            if (isLeftStatementGreater)
+                            {
+                                return false;
+                            }
+                            else
+                            {
+                                return true;
+                            }
+                        }
+                   // }
+                  //  else if (rightNumeric >= leftNumeric)
+                 /* //  {
+                        if (isRightStatementRight)
+                        {
+                            if (isRightStatementGreater)
+                            {
+                                return true;
+                            }
+                            else
+                            {
+                                return false;
+                            }
+                        }
+                        else
+                        {
+                            if (isRightStatementGreater)
+                            {
+                                return false;
+                            }
+                            else
+                            {
+                                return true;
+                            }
+                        }  */  
+                    }
+                }
+            }
+        }
 
-           
-            return true;
+        private static void AnalysisBorderGreater(string statement, ref double numeric, ref bool isRight)
+        {
+            try
+            {
+                numeric = double.Parse(statement.Substring(0, statement.IndexOf('>')).Replace(" ", ""), CultureInfo.InvariantCulture);
+            }
+            catch
+            {
+                numeric = double.Parse(statement.Substring(statement.IndexOf('>') + 1).Replace(" ", ""), CultureInfo.InvariantCulture);
+                isRight = true;
+            }
+        }
+
+        private static void AnalysisBorderLess(string statement, ref double numeric, ref bool isRight)
+        {
+            try
+            {
+                numeric = double.Parse(statement.Substring(0, statement.IndexOf('<')).Replace(" ", ""), CultureInfo.InvariantCulture);
+            }
+            catch
+            {
+                numeric = double.Parse(statement.Substring(statement.IndexOf('<') + 1).Replace(" ", ""), CultureInfo.InvariantCulture);
+                isRight = true;
+            }
         }
 
         private static string CuteNumericForString(string stringNum)
