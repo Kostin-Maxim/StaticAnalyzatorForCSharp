@@ -18,15 +18,15 @@ namespace StaticAnalyzatorForCSharp
         }
         public static void Start(ProgressBar progressBar)
         {
-           /* while (true)
+            while (true)
             {
                 if (progressBar.Value == 100)
                 {
                     break;
                 }
 
-                progressBar.Invoke(new Action(() => progressBar.Value += (int)progress));
-            }*/
+                progressBar.Invoke(new Action(() => progressBar.Value = (int)progress));
+            }
         }
     }
 }

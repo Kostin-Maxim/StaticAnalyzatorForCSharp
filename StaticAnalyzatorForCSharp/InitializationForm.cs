@@ -221,7 +221,7 @@ namespace StaticAnalyzatorForCSharp
             {
                 if (File.Exists(textBoxPath.Text))
                 {
-                    //OnOffUI();
+                    OnOffUI();
                     listBox1.Items.Clear();
                     progressBar.Value = 0;
                     Task.Factory.StartNew(() => ProgressBarWork.Start(progressBar)).ContinueWith(t => this.Invoke(new Action(() => OnOffUI())));

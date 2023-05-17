@@ -57,7 +57,8 @@ namespace StaticAnalyzatorForCSharp
 
                         if (ifStatementNodes.Count() != 0)
                         {
-                            ProgressBarWork.SetProgress += (double)100 / countWarningsForProgressBar;
+                            ProgressBarWork.SetProgress = (double)100 / countWarningsForProgressBar;
+                            countWarningsForProgressBar--;
                         }
                     }
 
@@ -82,7 +83,8 @@ namespace StaticAnalyzatorForCSharp
 
                         if (throwStatementNodes.Count() != 0)
                         {
-                            ProgressBarWork.SetProgress += (double)100 / countWarningsForProgressBar;
+                            ProgressBarWork.SetProgress = (double)100 / countWarningsForProgressBar;
+                            countWarningsForProgressBar--;
                         }
                     }
 
@@ -106,7 +108,8 @@ namespace StaticAnalyzatorForCSharp
 
                         if (methodStatementNodes.Count() != 0)
                         {
-                            ProgressBarWork.SetProgress += (double)100 / countWarningsForProgressBar;
+                            ProgressBarWork.SetProgress = (double)100 / countWarningsForProgressBar;
+                            countWarningsForProgressBar--;
                         }
                     }
 
@@ -130,7 +133,8 @@ namespace StaticAnalyzatorForCSharp
 
                         if (variableStatementsNodes.Count() != 0)
                         {
-                            ProgressBarWork.SetProgress += (double)100 / countWarningsForProgressBar;
+                            ProgressBarWork.SetProgress = (double)100 / countWarningsForProgressBar;
+                            countWarningsForProgressBar--;
                         }
                     }
 
@@ -154,7 +158,8 @@ namespace StaticAnalyzatorForCSharp
 
                         if (formatNodes.Count() != 0)
                         {
-                            ProgressBarWork.SetProgress += (double)100 / countWarningsForProgressBar;
+                            ProgressBarWork.SetProgress = (double)100 / countWarningsForProgressBar;
+                            countWarningsForProgressBar--;
                         }
                     }
 
@@ -177,7 +182,8 @@ namespace StaticAnalyzatorForCSharp
 
                         if (binaryStatementNodes.Count() != 0)
                         {
-                            ProgressBarWork.SetProgress += (double)100 / countWarningsForProgressBar;
+                            ProgressBarWork.SetProgress = (double)100 / countWarningsForProgressBar;
+                            countWarningsForProgressBar--;
                         }
                     }
 
@@ -200,7 +206,8 @@ namespace StaticAnalyzatorForCSharp
 
                         if (binaryStatementNodes.Count() != 0)
                         {
-                            ProgressBarWork.SetProgress += (double)100 / countWarningsForProgressBar;
+                            ProgressBarWork.SetProgress = (double)100 / countWarningsForProgressBar;
+                            countWarningsForProgressBar--;
                         }
                     }
                 }
