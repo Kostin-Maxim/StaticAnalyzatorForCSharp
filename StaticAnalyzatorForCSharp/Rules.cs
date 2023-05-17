@@ -11,7 +11,6 @@ namespace StaticAnalyzatorForCSharp
 {
     internal class Rules
     {
-        private CultureInfo ciEnUs = new CultureInfo("en-us");
         internal static bool IfElseRule(IfStatementSyntax ifStatement)
         {
             if (ifStatement?.Else == null)
@@ -73,7 +72,7 @@ namespace StaticAnalyzatorForCSharp
             string rightStatement = binaryExpression.Right.ToString();
 
             if (leftStatement.IndexOfAny(new char[] { '>', '<' }) == -1 || rightStatement.IndexOfAny(new char[] { '>', '<' }) == -1)
-                return true;
+                return false;
 
             // Переменные полученные из условия
             double leftNumeric = 0;
@@ -97,12 +96,12 @@ namespace StaticAnalyzatorForCSharp
             }
             else if (binaryExpression.Left.Kind().ToString() == less)
             {
-                AnalysisBorderGreater(binaryExpression.Left.ToString(), ref leftNumeric, ref isRightStatementLeft);
+                AnalysisBorderLess(binaryExpression.Left.ToString(), ref leftNumeric, ref isRightStatementLeft);
             }
 
             if (binaryExpression.Right.Kind().ToString() == greater)
             {
-                AnalysisBorderLess(binaryExpression.Right.ToString(), ref rightNumeric, ref isRightStatementRight);
+                AnalysisBorderGreater(binaryExpression.Right.ToString(), ref rightNumeric, ref isRightStatementRight);
                 isRightStatementGreater = true;
             }
             else if (binaryExpression.Right.Kind().ToString() == less)
@@ -115,7 +114,7 @@ namespace StaticAnalyzatorForCSharp
             {
                 if (isRightStatementLeft == isRightStatementRight)
                 {
-                    return true;
+                    return false;
                 }
                 else
                 {
@@ -125,9 +124,9 @@ namespace StaticAnalyzatorForCSharp
                         {
                             return true;
                         }
-                        else 
-                        { 
-                            return false; 
+                        else
+                        {
+                            return false;
                         }
                     }
                     else if (rightNumeric >= leftNumeric)
@@ -143,7 +142,7 @@ namespace StaticAnalyzatorForCSharp
                     }
                 }
             }
-            else 
+            else
             {
                 if (isRightStatementLeft != isRightStatementRight)
                 {
@@ -151,8 +150,8 @@ namespace StaticAnalyzatorForCSharp
                 }
                 else
                 {
-                   // if (leftNumeric >= rightNumeric)
-                   // {
+                    if (leftNumeric >= rightNumeric)
+                    {
                         if (isRightStatementLeft)
                         {
                             if (isLeftStatementGreater)
@@ -164,7 +163,7 @@ namespace StaticAnalyzatorForCSharp
                                 return false;
                             }
                         }
-                        else 
+                        else
                         {
                             if (isLeftStatementGreater)
                             {
@@ -175,9 +174,9 @@ namespace StaticAnalyzatorForCSharp
                                 return true;
                             }
                         }
-                   // }
-                  //  else if (rightNumeric >= leftNumeric)
-                 /* //  {
+                    }
+                    else if (rightNumeric >= leftNumeric)
+                    {
                         if (isRightStatementRight)
                         {
                             if (isRightStatementGreater)
@@ -199,12 +198,15 @@ namespace StaticAnalyzatorForCSharp
                             {
                                 return true;
                             }
-                        }  */  
+                        }
                     }
+
                 }
             }
-        }
 
+            return false;
+
+        }
         private static void AnalysisBorderGreater(string statement, ref double numeric, ref bool isRight)
         {
             try
@@ -229,21 +231,6 @@ namespace StaticAnalyzatorForCSharp
                 numeric = double.Parse(statement.Substring(statement.IndexOf('<') + 1).Replace(" ", ""), CultureInfo.InvariantCulture);
                 isRight = true;
             }
-        }
-
-        private static string CuteNumericForString(string stringNum)
-        {
-            string localString = "";
-
-            foreach (var word in stringNum)
-            {
-                if (word > 44 && word < 57)
-                {
-                    localString += word;
-                }
-            }
-
-            return localString;
         }
     }
 }

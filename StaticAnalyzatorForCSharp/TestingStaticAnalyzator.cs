@@ -194,7 +194,7 @@ namespace StaticAnalyzatorForCSharp
                                 int lineNumber = binaryStatement.GetLocation()
                                                             .GetLineSpan()
                                                             .StartLinePosition.Line + 1;
-                                listWarnings.Invoke(new Action(() => ListboxStringsAdd(listWarnings, counterWarnings, NamesMessage.IfStateEqualsMessage, document.FilePath, lineNumber)));
+                                listWarnings.Invoke(new Action(() => ListboxStringsAdd(listWarnings, counterWarnings, NamesMessage.IsImpossibleIfMessage, document.FilePath, lineNumber)));
                             }
                         }
 
