@@ -5,7 +5,6 @@ using Microsoft.CodeAnalysis.MSBuild;
 using System;
 using System.Configuration;
 using System.Linq;
-using System.Threading;
 using System.Windows.Forms;
 
 namespace StaticAnalyzatorForCSharp
@@ -24,6 +23,7 @@ namespace StaticAnalyzatorForCSharp
             using (workspace = MSBuildWorkspace.Create())
             {
                 int countWarningsForProgressBar = 0;
+                bool isCheckRule = false;
 
                 foreach (var rule in Properties.Settings.Default.PropertyValues)
                 {
@@ -55,9 +55,12 @@ namespace StaticAnalyzatorForCSharp
                             }
                         }
 
-                        if (ifStatementNodes.Count() != 0)
+                        if (ifStatementNodes.Count() != 0 && countWarningsForProgressBar > 0)
                         {
-                            ProgressBarWork.SetProgress = (double)100 / countWarningsForProgressBar;
+                            ChangeProgressBar(ref countWarningsForProgressBar, ref isCheckRule);
+                        }
+                        else
+                        {
                             countWarningsForProgressBar--;
                         }
                     }
@@ -81,9 +84,12 @@ namespace StaticAnalyzatorForCSharp
                             }
                         }
 
-                        if (throwStatementNodes.Count() != 0)
+                        if (throwStatementNodes.Count() != 0 && countWarningsForProgressBar > 0)
                         {
-                            ProgressBarWork.SetProgress = (double)100 / countWarningsForProgressBar;
+                            ChangeProgressBar(ref countWarningsForProgressBar, ref isCheckRule);
+                        }
+                        else
+                        {
                             countWarningsForProgressBar--;
                         }
                     }
@@ -106,9 +112,12 @@ namespace StaticAnalyzatorForCSharp
                             }
                         }
 
-                        if (methodStatementNodes.Count() != 0)
+                        if (methodStatementNodes.Count() != 0 && countWarningsForProgressBar > 0)
                         {
-                            ProgressBarWork.SetProgress = (double)100 / countWarningsForProgressBar;
+                            ChangeProgressBar(ref countWarningsForProgressBar, ref isCheckRule);
+                        }
+                        else
+                        {
                             countWarningsForProgressBar--;
                         }
                     }
@@ -131,89 +140,101 @@ namespace StaticAnalyzatorForCSharp
                             }
                         }
 
-                        if (variableStatementsNodes.Count() != 0)
+                        if (variableStatementsNodes.Count() != 0 && countWarningsForProgressBar > 0)
                         {
-                            ProgressBarWork.SetProgress = (double)100 / countWarningsForProgressBar;
+                            ChangeProgressBar(ref countWarningsForProgressBar, ref isCheckRule);
+                        }
+                        else
+                        {
                             countWarningsForProgressBar--;
                         }
-                    }
 
-                    if (SettingsRules.GetDictionary(SettingsRules.NamesErrors.correctNameVariableInFor))
-                    {
-                        var formatNodes = tree.GetRoot()
-                                                    .DescendantNodesAndSelf()
-                                                    .OfType<ForStatementSyntax>();
-                        foreach (var formatNode in formatNodes)
+                        if (SettingsRules.GetDictionary(SettingsRules.NamesErrors.correctNameVariableInFor))
                         {
-                            if (Rules.CorrectNameFor(formatNode))
+                            var formatNodes = tree.GetRoot()
+                                                        .DescendantNodesAndSelf()
+                                                        .OfType<ForStatementSyntax>();
+                            foreach (var formatNode in formatNodes)
                             {
-                                counterWarnings++;
-                                int lineNumber = formatNode.GetLocation()
-                                .GetLineSpan()
-                                .StartLinePosition.Line + 1;
+                                if (Rules.CorrectNameFor(formatNode))
+                                {
+                                    counterWarnings++;
+                                    int lineNumber = formatNode.GetLocation()
+                                    .GetLineSpan()
+                                    .StartLinePosition.Line + 1;
 
-                                listWarnings.Invoke(new Action(() => ListboxStringsAdd(listWarnings, counterWarnings, NamesMessage.СorrectNameVariableInForMessage, document.FilePath, lineNumber)));
+                                    listWarnings.Invoke(new Action(() => ListboxStringsAdd(listWarnings, counterWarnings, NamesMessage.СorrectNameVariableInForMessage, document.FilePath, lineNumber)));
+                                }
+                            }
+
+                            if (formatNodes.Count() != 0 && countWarningsForProgressBar > 0)
+                            {
+                                ChangeProgressBar(ref countWarningsForProgressBar, ref isCheckRule);
+                            }
+                            else
+                            {
+                                countWarningsForProgressBar--;
                             }
                         }
 
-                        if (formatNodes.Count() != 0)
+                        if (SettingsRules.GetDictionary(SettingsRules.NamesErrors.ifStateEquals))
                         {
-                            ProgressBarWork.SetProgress = (double)100 / countWarningsForProgressBar;
-                            countWarningsForProgressBar--;
-                        }
-                    }
-
-                    if (SettingsRules.GetDictionary(SettingsRules.NamesErrors.ifStateEquals))
-                    {
-                        var binaryStatementNodes = tree.GetRoot()
-                                                   .DescendantNodesAndSelf()
-                                                   .OfType<BinaryExpressionSyntax>();
-                        foreach (var binaryStatement in binaryStatementNodes)
-                        {
-                            if (Rules.IfStateEquals(binaryStatement))
+                            var binaryStatementNodes = tree.GetRoot()
+                                                       .DescendantNodesAndSelf()
+                                                       .OfType<BinaryExpressionSyntax>();
+                            foreach (var binaryStatement in binaryStatementNodes)
                             {
-                                counterWarnings++;
-                                int lineNumber = binaryStatement.GetLocation()
-                                                            .GetLineSpan()
-                                                            .StartLinePosition.Line + 1;
-                                listWarnings.Invoke(new Action(() => ListboxStringsAdd(listWarnings, counterWarnings, NamesMessage.IfStateEqualsMessage, document.FilePath, lineNumber)));
+                                if (Rules.IfStateEquals(binaryStatement))
+                                {
+                                    counterWarnings++;
+                                    int lineNumber = binaryStatement.GetLocation()
+                                                                .GetLineSpan()
+                                                                .StartLinePosition.Line + 1;
+                                    listWarnings.Invoke(new Action(() => ListboxStringsAdd(listWarnings, counterWarnings, NamesMessage.IfStateEqualsMessage, document.FilePath, lineNumber)));
+                                }
+                            }
+
+                            if (binaryStatementNodes.Count() != 0 && countWarningsForProgressBar > 0)
+                            {
+                                ChangeProgressBar(ref countWarningsForProgressBar, ref isCheckRule);
+                            }
+                            else
+                            {
+                                countWarningsForProgressBar--;
                             }
                         }
 
-                        if (binaryStatementNodes.Count() != 0)
+                        if (SettingsRules.GetDictionary(SettingsRules.NamesErrors.ifStateImpossible))
                         {
-                            ProgressBarWork.SetProgress = (double)100 / countWarningsForProgressBar;
-                            countWarningsForProgressBar--;
-                        }
-                    }
-
-                    if (SettingsRules.GetDictionary(SettingsRules.NamesErrors.ifStateImpossible))
-                    {
-                        var binaryStatementNodes = tree.GetRoot()
-                                                   .DescendantNodesAndSelf()
-                                                   .OfType<BinaryExpressionSyntax>();
-                        foreach (var binaryStatement in binaryStatementNodes)
-                        {
-                            if (Rules.IfStateImpossible(binaryStatement))
+                            var binaryStatementNodes = tree.GetRoot()
+                                                       .DescendantNodesAndSelf()
+                                                       .OfType<BinaryExpressionSyntax>();
+                            foreach (var binaryStatement in binaryStatementNodes)
                             {
-                                counterWarnings++;
-                                int lineNumber = binaryStatement.GetLocation()
-                                                            .GetLineSpan()
-                                                            .StartLinePosition.Line + 1;
-                                listWarnings.Invoke(new Action(() => ListboxStringsAdd(listWarnings, counterWarnings, NamesMessage.IsImpossibleIfMessage, document.FilePath, lineNumber)));
+                                if (Rules.IfStateImpossible(binaryStatement))
+                                {
+                                    counterWarnings++;
+                                    int lineNumber = binaryStatement.GetLocation()
+                                                                .GetLineSpan()
+                                                                .StartLinePosition.Line + 1;
+                                    listWarnings.Invoke(new Action(() => ListboxStringsAdd(listWarnings, counterWarnings, NamesMessage.IsImpossibleIfMessage, document.FilePath, lineNumber)));
+                                }
                             }
-                        }
 
-                        if (binaryStatementNodes.Count() != 0)
-                        {
-                            ProgressBarWork.SetProgress = (double)100 / countWarningsForProgressBar;
-                            countWarningsForProgressBar--;
+                            if (binaryStatementNodes.Count() != 0 && countWarningsForProgressBar > 0)
+                            {
+                                ChangeProgressBar(ref countWarningsForProgressBar, ref isCheckRule);
+                            }
+                            else
+                            {
+                                countWarningsForProgressBar--;
+                            }
                         }
                     }
                 }
             }
-        }
 
+        }
         private static void ListboxStringsAdd(ListBox listWarnings, int counter, string ruleMessage, string path, int lineNumber)
         {
             listWarnings.Items.Add(String.Format(counter + ". " + ruleMessage, path, lineNumber));
@@ -230,6 +251,13 @@ namespace StaticAnalyzatorForCSharp
             Solution currSolution = workspace.OpenSolutionAsync(solutionPath)
                                              .Result;
             return currSolution.Projects.Single();
+        }
+
+        private static void ChangeProgressBar(ref int countWarningsForProgressBar, ref bool isCheckRule)
+        {
+            isCheckRule = true;
+            ProgressBarWork.SetProgress = (double)100 / countWarningsForProgressBar;
+            countWarningsForProgressBar--;
         }
     }
 }
