@@ -32,6 +32,12 @@ namespace StaticAnalyzatorForCSharp
                         countWarningsForProgressBar++;
                 }
 
+                if (countWarningsForProgressBar == 0)
+                {
+                    ProgressBarWork.SetProgress = 100;
+                    return;
+                }
+
                 int counterWarnings = 0;
                 Project currProject = GetProjectFromSolution(path, workspace);
                 foreach (var document in currProject.Documents)
@@ -148,93 +154,94 @@ namespace StaticAnalyzatorForCSharp
                         {
                             countWarningsForProgressBar--;
                         }
+                    }
 
-                        if (SettingsRules.GetDictionary(SettingsRules.NamesErrors.correctNameVariableInFor))
+                    if (SettingsRules.GetDictionary(SettingsRules.NamesErrors.correctNameVariableInFor))
+                    {
+                        var formatNodes = tree.GetRoot()
+                                                    .DescendantNodesAndSelf()
+                                                    .OfType<ForStatementSyntax>();
+                        foreach (var formatNode in formatNodes)
                         {
-                            var formatNodes = tree.GetRoot()
-                                                        .DescendantNodesAndSelf()
-                                                        .OfType<ForStatementSyntax>();
-                            foreach (var formatNode in formatNodes)
+                            if (Rules.CorrectNameFor(formatNode))
                             {
-                                if (Rules.CorrectNameFor(formatNode))
-                                {
-                                    counterWarnings++;
-                                    int lineNumber = formatNode.GetLocation()
-                                    .GetLineSpan()
-                                    .StartLinePosition.Line + 1;
+                                counterWarnings++;
+                                int lineNumber = formatNode.GetLocation()
+                                .GetLineSpan()
+                                .StartLinePosition.Line + 1;
 
-                                    listWarnings.Invoke(new Action(() => ListboxStringsAdd(listWarnings, counterWarnings, NamesMessage.СorrectNameVariableInForMessage, document.FilePath, lineNumber)));
-                                }
-                            }
-
-                            if (formatNodes.Count() != 0 && countWarningsForProgressBar > 0)
-                            {
-                                ChangeProgressBar(ref countWarningsForProgressBar, ref isCheckRule);
-                            }
-                            else
-                            {
-                                countWarningsForProgressBar--;
+                                listWarnings.Invoke(new Action(() => ListboxStringsAdd(listWarnings, counterWarnings, NamesMessage.СorrectNameVariableInForMessage, document.FilePath, lineNumber)));
                             }
                         }
 
-                        if (SettingsRules.GetDictionary(SettingsRules.NamesErrors.ifStateEquals))
+                        if (formatNodes.Count() != 0 && countWarningsForProgressBar > 0)
                         {
-                            var binaryStatementNodes = tree.GetRoot()
-                                                       .DescendantNodesAndSelf()
-                                                       .OfType<BinaryExpressionSyntax>();
-                            foreach (var binaryStatement in binaryStatementNodes)
-                            {
-                                if (Rules.IfStateEquals(binaryStatement))
-                                {
-                                    counterWarnings++;
-                                    int lineNumber = binaryStatement.GetLocation()
-                                                                .GetLineSpan()
-                                                                .StartLinePosition.Line + 1;
-                                    listWarnings.Invoke(new Action(() => ListboxStringsAdd(listWarnings, counterWarnings, NamesMessage.IfStateEqualsMessage, document.FilePath, lineNumber)));
-                                }
-                            }
-
-                            if (binaryStatementNodes.Count() != 0 && countWarningsForProgressBar > 0)
-                            {
-                                ChangeProgressBar(ref countWarningsForProgressBar, ref isCheckRule);
-                            }
-                            else
-                            {
-                                countWarningsForProgressBar--;
-                            }
+                            ChangeProgressBar(ref countWarningsForProgressBar, ref isCheckRule);
                         }
-
-                        if (SettingsRules.GetDictionary(SettingsRules.NamesErrors.ifStateImpossible))
+                        else
                         {
-                            var binaryStatementNodes = tree.GetRoot()
-                                                       .DescendantNodesAndSelf()
-                                                       .OfType<BinaryExpressionSyntax>();
-                            foreach (var binaryStatement in binaryStatementNodes)
-                            {
-                                if (Rules.IfStateImpossible(binaryStatement))
-                                {
-                                    counterWarnings++;
-                                    int lineNumber = binaryStatement.GetLocation()
-                                                                .GetLineSpan()
-                                                                .StartLinePosition.Line + 1;
-                                    listWarnings.Invoke(new Action(() => ListboxStringsAdd(listWarnings, counterWarnings, NamesMessage.IsImpossibleIfMessage, document.FilePath, lineNumber)));
-                                }
-                            }
-
-                            if (binaryStatementNodes.Count() != 0 && countWarningsForProgressBar > 0)
-                            {
-                                ChangeProgressBar(ref countWarningsForProgressBar, ref isCheckRule);
-                            }
-                            else
-                            {
-                                countWarningsForProgressBar--;
-                            }
+                            countWarningsForProgressBar--;
                         }
                     }
+
+                    if (SettingsRules.GetDictionary(SettingsRules.NamesErrors.ifStateEquals))
+                    {
+                        var binaryStatementNodes = tree.GetRoot()
+                                                   .DescendantNodesAndSelf()
+                                                   .OfType<BinaryExpressionSyntax>();
+                        foreach (var binaryStatement in binaryStatementNodes)
+                        {
+                            if (Rules.IfStateEquals(binaryStatement))
+                            {
+                                counterWarnings++;
+                                int lineNumber = binaryStatement.GetLocation()
+                                                            .GetLineSpan()
+                                                            .StartLinePosition.Line + 1;
+                                listWarnings.Invoke(new Action(() => ListboxStringsAdd(listWarnings, counterWarnings, NamesMessage.IfStateEqualsMessage, document.FilePath, lineNumber)));
+                            }
+                        }
+
+                        if (binaryStatementNodes.Count() != 0 && countWarningsForProgressBar > 0)
+                        {
+                            ChangeProgressBar(ref countWarningsForProgressBar, ref isCheckRule);
+                        }
+                        else
+                        {
+                            countWarningsForProgressBar--;
+                        }
+                    }
+
+                    if (SettingsRules.GetDictionary(SettingsRules.NamesErrors.ifStateImpossible))
+                    {
+                        var binaryStatementNodes = tree.GetRoot()
+                                                   .DescendantNodesAndSelf()
+                                                   .OfType<BinaryExpressionSyntax>();
+                        foreach (var binaryStatement in binaryStatementNodes)
+                        {
+                            if (Rules.IfStateImpossible(binaryStatement))
+                            {
+                                counterWarnings++;
+                                int lineNumber = binaryStatement.GetLocation()
+                                                            .GetLineSpan()
+                                                            .StartLinePosition.Line + 1;
+                                listWarnings.Invoke(new Action(() => ListboxStringsAdd(listWarnings, counterWarnings, NamesMessage.IsImpossibleIfMessage, document.FilePath, lineNumber)));
+                            }
+                        }
+
+                        if (binaryStatementNodes.Count() != 0 && countWarningsForProgressBar > 0)
+                        {
+                            ChangeProgressBar(ref countWarningsForProgressBar, ref isCheckRule);
+                        }
+                        else
+                        {
+                            countWarningsForProgressBar--;
+                        }
+                    }
+
                 }
             }
-
         }
+
         private static void ListboxStringsAdd(ListBox listWarnings, int counter, string ruleMessage, string path, int lineNumber)
         {
             listWarnings.Items.Add(String.Format(counter + ". " + ruleMessage, path, lineNumber));

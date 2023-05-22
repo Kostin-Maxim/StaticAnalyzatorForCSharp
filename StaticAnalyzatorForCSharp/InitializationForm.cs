@@ -283,9 +283,7 @@ namespace StaticAnalyzatorForCSharp
             SaveFileDialog saveFileDialog = new SaveFileDialog
             {
                 Filter = "Текстовые файлы (*.txt)|*.txt|Документ Word (*.doc)|*.doc|Все файлы (*.*)|*.*",
-                CheckFileExists = true,
                 FileName = "Отчет"
-
             };
 
             if (saveFileDialog.ShowDialog() == DialogResult.OK)
@@ -298,7 +296,7 @@ namespace StaticAnalyzatorForCSharp
                     fileText += item.ToString() + '\n';
                 }
 
-                File.WriteAllText(fileName, fileText);
+                File.WriteAllText(fileName, fileText, encoding: System.Text.Encoding.UTF8);
             }
         }
     }
