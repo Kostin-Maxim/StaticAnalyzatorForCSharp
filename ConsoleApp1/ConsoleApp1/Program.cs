@@ -1,21 +1,9 @@
 ﻿internal class Program
 {
-    private enum week
-    { 
-        Monday,
-        Tuesday,
-        Wednesday,
-        Thursday,
-        Friday
-    }
     private static void Main(string[] args)
     {
         int A = 5;
 
-        var a = week.Monday;
-        var b = week.Tuesday;
-        var d = week.Thursday;
-        var e = week.Friday;
         if (A == 100)
         {
             Console.WriteLine(A);
